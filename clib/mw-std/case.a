@@ -1,0 +1,32 @@
+* Disassembly by Os9disasm of case.r
+
+ psect case_c,$0,$0,2,0,toupper 
+
+toupper: pshs  u 
+ ldd   4,s 
+ leax  _chcodes,y 
+ leax  d,x 
+ ldb   ,x 
+ clra   
+ andb  #4 
+ beq   L002f 
+ ldd   4,s 
+ clra   
+ andb  #$df 
+ bra   L0031 
+tolower: pshs  u 
+ ldd   4,s 
+ leax  _chcodes,y 
+ leax  d,x 
+ ldb   ,x 
+ clra   
+ andb  #2 
+ beq   L002f 
+ ldd   4,s 
+ orb   #$20 
+ bra   L0031 
+L002f ldd   4,s 
+L0031 puls  u,pc 
+
+ ends  
+

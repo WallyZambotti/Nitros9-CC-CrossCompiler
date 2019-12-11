@@ -1,0 +1,37 @@
+* Disassembly by Os9disasm of puts.r
+
+ psect puts_c,$0,$0,1,0,puts 
+
+puts: pshs  u 
+ leax  _iob+13,y 
+ pshs  x 
+ ldd   6,s 
+ pshs  d 
+ bsr   fputs 
+ leas  4,s 
+ leax  _iob+13,y 
+ pshs  x 
+ ldd   #$000d 
+ pshs  d 
+ lbsr  putc 
+ leas  4,s 
+ puls  u,pc 
+fputs: pshs  u 
+ ldu   4,s 
+ leas  -1,s 
+ bra   L0038 
+L002a ldd   7,s 
+ pshs  d 
+ ldb   2,s 
+ sex    
+ pshs  d 
+ lbsr  putc 
+ leas  4,s 
+L0038 ldb   ,u+ 
+ stb   ,s 
+ bne   L002a 
+ leas  1,s 
+ puls  u,pc 
+
+ ends  
+

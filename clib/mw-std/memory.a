@@ -1,0 +1,209 @@
+* Disassembly by Os9disasm of memory.r
+
+ psect memory_c,$0,$0,1,0,L0000 
+
+ vsect  
+
+* Uninitialized data (class B)
+B0000 rmb 2 
+B0002 rmb 2 
+* Initialized Data (class G)
+G0000 fcb $00 
+ fcb $00 
+
+ ends  
+
+
+L0000 pshs  d,x,u 
+ ldd   8,s 
+ addd  #$00ff 
+ pshs  d 
+ ldd   #8 
+ lbsr  cclsr 
+ pshs  d 
+ ldd   #8 
+ lbsr  ccasl 
+ std   ,s 
+ lslb   
+ rola   
+ lslb   
+ rola   
+ pshs  d 
+ lbsr  sbrk 
+ leas  2,s 
+ tfr   d,u 
+ cmpu  #-1 
+ bne   L0030 
+ clra   
+ clrb   
+ bra   L0048 
+L0030 stu   2,s 
+ ldd   ,s 
+ ldx   2,s 
+ std   2,x 
+ ldd   2,s 
+ addd  #4 
+ pshs  d 
+ lbsr  free 
+ leas  2,s 
+ ldd   G0000,y 
+L0048 leas  4,s 
+ puls  u,pc 
+malloc: pshs  d,x,y,u 
+ ldd   10,s 
+ addd  #3 
+ lsra   
+ rorb   
+ lsra   
+ rorb   
+ addd  #1 
+ std   ,s 
+ ldd   G0000,y 
+ std   4,s 
+ bne   L007a 
+ leax  B0000,y 
+ stx   4,s 
+ tfr   x,d 
+ std   G0000,y 
+ std   B0000,y 
+ clra   
+ clrb   
+ std   B0002,y 
+L007a ldu   [4,s] 
+L007d ldd   2,u 
+ cmpd  ,s 
+ bcs   L00b1 
+ ldd   2,u 
+ cmpd  ,s 
+ bne   L0092 
+ ldd   ,u 
+ std   [4,s] 
+ bra   L00a2 
+L0092 ldd   2,u 
+ subd  ,s 
+ std   2,u 
+ lslb   
+ rola   
+ lslb   
+ rola   
+ leau  d,u 
+ ldd   ,s 
+ std   2,u 
+L00a2 ldd   4,s 
+ std   G0000,y 
+ pshs  u 
+ ldd   #4 
+ addd  ,s++ 
+ bra   L00d2 
+L00b1 cmpu  G0000,y 
+ bne   L00cb 
+ ldd   ,s 
+ pshs  d 
+ lbsr  L0000 
+ leas  2,s 
+ tfr   d,u 
+ stu   -2,s 
+ bne   L00cb 
+ clra   
+ clrb   
+ bra   L00d2 
+L00cb stu   4,s 
+ ldu   ,u 
+ lbra  L007d 
+L00d2 leas  6,s 
+ puls  u,pc 
+free: pshs  d,u 
+ ldd   6,s 
+ addd  #-4 
+ tfr   d,u 
+ ldd   G0000,y 
+ bra   L00f8 
+L00e5 ldd   ,s 
+ cmpd  [,s] 
+ bcs   L00f6 
+ cmpu  ,s 
+ bhi   L0106 
+ cmpu  [,s] 
+ bcs   L0106 
+L00f6 ldd   [,s] 
+L00f8 std   ,s 
+ cmpu  ,s 
+ bls   L00e5 
+ cmpu  [,s] 
+ lbhs  L00e5 
+L0106 pshs  u 
+ ldd   2,u 
+ lslb   
+ rola   
+ lslb   
+ rola   
+ addd  ,s++ 
+ cmpd  [,s] 
+ bne   L0128 
+ ldd   2,u 
+ pshs  d 
+ ldx   [2,s] 
+ ldd   2,x 
+ addd  ,s++ 
+ std   2,u 
+ ldx   ,s 
+ ldd   [,x] 
+ bra   L012a 
+L0128 ldd   [,s] 
+L012a std   ,u 
+ ldx   ,s 
+ ldd   2,x 
+ lslb   
+ rola   
+ lslb   
+ rola   
+ addd  ,s 
+ pshs  d 
+ cmpu  ,s++ 
+ bne   L014b 
+ ldx   ,s 
+ ldd   2,x 
+ addd  2,u 
+ std   2,x 
+ ldd   ,u 
+ std   [,s] 
+ bra   L014d 
+L014b stu   [,s] 
+L014d ldd   ,s 
+ std   G0000,y 
+ bra   L017b 
+calloc: pshs  d,u 
+ ldd   6,s 
+ pshs  d 
+ ldd   10,s 
+ lbsr  ccmult 
+ std   ,s 
+ pshs  d 
+ lbsr  malloc 
+ leas  2,s 
+ tfr   d,u 
+ stu   -2,s 
+ beq   L0179 
+ ldd   ,s 
+ pshs  d 
+ pshs  u 
+ bsr   L017f 
+ leas  4,s 
+L0179 tfr   u,d 
+L017b leas  2,s 
+ puls  u,pc 
+L017f pshs  u 
+ ldu   4,s 
+ bra   L0189 
+L0185 clra   
+ clrb   
+ stb   ,u+ 
+L0189 ldd   6,s 
+ addd  #-1 
+ std   6,s 
+ subd  #-1 
+ bne   L0185 
+ puls  u,pc 
+
+ ends  
+

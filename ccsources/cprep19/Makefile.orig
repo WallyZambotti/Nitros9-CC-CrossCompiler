@@ -1,0 +1,11 @@
+RELS =cp.o cp1.o cp2.o cp3.o cp4.o solve.o
+
+CFLAGS = -g -I.
+
+coprep: $(RELS)
+	gcc $(RELS) -o $@
+
+$(RELS): cp.h
+
+clean:
+	rm -f $(RELS);

@@ -1,0 +1,8 @@
+* Disassembly by Os9disasm of profdummy.r
+
+ psect profdummy_a,$0,$0,0,0,_dumprof 
+
+_dumprof: rts    
+
+ ends  
+

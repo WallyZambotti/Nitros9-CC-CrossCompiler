@@ -1,0 +1,121 @@
+* Disassembly by Os9disasm of stringsn.r
+
+ psect stringsn_c,$0,$0,3,0,strncpy 
+
+strncpy: pshs  u 
+ ldu   6,s 
+ leas  -2,s 
+ ldd   6,s 
+ std   ,s 
+L000a ldd   10,s 
+ addd  #-1 
+ std   10,s 
+ subd  #-1 
+ ble   L002e 
+ ldb   ,u+ 
+ ldx   ,s 
+ leax  1,x 
+ stx   ,s 
+ stb   -1,x 
+ bne   L000a 
+ bra   L002e 
+L0024 clra   
+ clrb   
+ ldx   ,s 
+ leax  1,x 
+ stx   ,s 
+ stb   -1,x 
+L002e ldd   10,s 
+ addd  #-1 
+ std   10,s 
+ subd  #-1 
+ bgt   L0024 
+ lbra  L00bd 
+strncmp: pshs  u 
+ ldu   4,s 
+ bra   L0053 
+L0043 ldx   6,s 
+ leax  1,x 
+ stx   6,s 
+ ldb   -1,x 
+ bne   L0051 
+ clra   
+ clrb   
+ puls  u,pc 
+L0051 leau  1,u 
+L0053 ldd   8,s 
+ addd  #-1 
+ std   8,s 
+ subd  #-1 
+ ble   L006d 
+ ldb   ,u 
+ sex    
+ pshs  d 
+ ldb   [8,s] 
+ sex    
+ cmpd  ,s++ 
+ beq   L0043 
+L006d ldd   8,s 
+ bge   L0075 
+ clra   
+ clrb   
+ bra   L0080 
+L0075 ldb   [6,s] 
+ sex    
+ pshs  d 
+ ldb   ,u 
+ sex    
+ subd  ,s++ 
+L0080 puls  u,pc 
+strncat: pshs  u 
+ ldu   6,s 
+ leas  -2,s 
+ ldd   6,s 
+ std   ,s 
+L008c ldx   ,s 
+ leax  1,x 
+ stx   ,s 
+ ldb   -1,x 
+ bne   L008c 
+ ldd   ,s 
+ addd  #-1 
+ std   ,s 
+L009d ldd   10,s 
+ addd  #-1 
+ std   10,s 
+ subd  #-1 
+ ble   L00b5 
+ ldb   ,u+ 
+ ldx   ,s 
+ leax  1,x 
+ stx   ,s 
+ stb   -1,x 
+ bne   L009d 
+L00b5 ldd   10,s 
+ bge   L00bd 
+ clra   
+ clrb   
+ stb   [,s] 
+L00bd ldd   6,s 
+ leas  2,s 
+ puls  u,pc 
+strhcpy: pshs  u 
+ ldu   4,s 
+L00c7 ldx   6,s 
+ leax  1,x 
+ stx   6,s 
+ ldb   -1,x 
+ stb   ,u+ 
+ bgt   L00c7 
+ ldb   -1,u 
+ clra   
+ andb  #$7f 
+ stb   -1,u 
+ clra   
+ clrb   
+ stb   ,u 
+ ldd   4,s 
+ puls  u,pc 
+
+ ends  
+

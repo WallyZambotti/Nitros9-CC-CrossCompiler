@@ -1,0 +1,75 @@
+* Disassembly by Os9disasm of strings.r
+
+ psect strings_c,$0,$0,1,0,strlen 
+
+strlen: pshs  u 
+ ldu   4,s 
+L0004 ldb   ,u+ 
+ bne   L0004 
+ tfr   u,d 
+ subd  4,s 
+ addd  #-1 
+ puls  u,pc 
+strcpy: pshs  u 
+ ldu   6,s 
+ leas  -2,s 
+ ldd   6,s 
+ std   ,s 
+L001b ldb   ,u+ 
+ ldx   ,s 
+ leax  1,x 
+ stx   ,s 
+ stb   -1,x 
+ bne   L001b 
+ bra   L0050 
+strcat: pshs  u 
+ ldu   6,s 
+ leas  -2,s 
+ ldd   6,s 
+ std   ,s 
+L0033 ldx   ,s 
+ leax  1,x 
+ stx   ,s 
+ ldb   -1,x 
+ bne   L0033 
+ ldd   ,s 
+ addd  #-1 
+ std   ,s 
+L0044 ldb   ,u+ 
+ ldx   ,s 
+ leax  1,x 
+ stx   ,s 
+ stb   -1,x 
+ bne   L0044 
+L0050 ldd   6,s 
+ leas  2,s 
+ puls  u,pc 
+strcmp: pshs  u 
+ ldu   4,s 
+ bra   L006c 
+L005c ldx   6,s 
+ leax  1,x 
+ stx   6,s 
+ ldb   -1,x 
+ bne   L006a 
+ clra   
+ clrb   
+ puls  u,pc 
+L006a leau  1,u 
+L006c ldb   ,u 
+ sex    
+ pshs  d 
+ ldb   [8,s] 
+ sex    
+ cmpd  ,s++ 
+ beq   L005c 
+ ldb   [6,s] 
+ sex    
+ pshs  d 
+ ldb   ,u 
+ sex    
+ subd  ,s++ 
+ puls  u,pc 
+
+ ends  
+

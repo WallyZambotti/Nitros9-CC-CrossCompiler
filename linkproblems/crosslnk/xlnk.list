@@ -1,0 +1,265 @@
+OS9 Cross Disassembler - Ver. 0.9.1    09/30/2008 09:35:13      Page 001
+
+    1                     * Disassembly by Os9disasm of f000tst
+    2
+    3  87CD 01e9                      mod    L01e9,L000d,$11,$81,L001e,D0595 
+    4
+    5                      * OS-9 system function equates
+    6
+    7  0006                F$Exit     equ    $06 
+    8  008C                I$WritLn   equ    $8c 
+    9
+   10                      * class X external label equates
+   11
+   12  73F4                X73f4      equ    $73f4 
+   13
+   14                       * OS9 data area definitions
+   15
+   16  0000                           rmb    33 
+   17  0021                D0021      rmb    34 
+   18  0043                D0043      rmb    2 
+   19  0045                D0045      rmb    58 
+   20  007F                D007f      rmb    1 
+   21  0080                D0080      rmb    3 
+   22  0083                D0083      rmb    1298 
+   23  0595                D0595      equ    . 
+   24
+   25  000D 66   30        L000d      ror    -16,y 
+   26  000F 30   30                   leax   -16,y 
+   27  0011 74   73f4                 lsr    X73f4 
+   28  0014 02                        fcb    $02 
+   29  0015 a6   a0        L0015      lda    ,y+ 
+   30  0017 a7   c0                   sta    ,u+ 
+   31  0019 30   1f                   leax   -1,x 
+   32  001B 26   f8                   bne    L0015 
+   33  001D 39                        rts     
+   34  001E 34   20        L001e      pshs   y 
+   35  0020 34   40                   pshs   u 
+   36  0022 4f                        clra    
+   37  0023 5f                        clrb    
+   38  0024 a7   c0        L0024      sta    ,u+ 
+   39  0026 5a                        decb    
+   40  0027 26   fb                   bne    L0024 
+   41  0029 ae   e4                   ldx    ,s 
+   42  002B 33   84                   leau   ,x 
+   43  002D 30   89 0095              leax   149,x 
+   44  0031 34   10                   pshs   x 
+   45  0033 31   8d 0162              leay   L0199,pcr 
+   46  0037 ae   a1                   ldx    ,y++ 
+   47  0039 27   04                   beq    L003f 
+   48  003B 8d   d8                   bsr    L0015 
+   49  003D ee   62                   ldu    2,s 
+   50  003F 33   c9 0021   L003f      leau   >D0021,u 
+   51  0043 ae   a1                   ldx    ,y++ 
+   52  0045 27   02                   beq    L0049 
+   53  0047 8d   cc                   bsr    L0015 
+   54  0049 4f             L0049      clra    
+   55  004A 11a3 e4        L004a      cmpu   ,s 
+   56  004D 27   04                   beq    L0053 
+   57  004F a7   c0                   sta    ,u+ 
+   58  0051 20   f7                   bra    L004a 
+   59  0053 ee   62        L0053      ldu    2,s 
+   60  0055 ec   a1                   ldd    ,y++ 
+
+
+
+
+
+OS9 Cross Disassembler - Ver. 0.9.1    09/30/2008 09:35:13      Page 002
+
+   61  0057 27   07                   beq    L0060 
+   62  0059 30   8d ffa3              leax   >L0000,pcr 
+   63  005D 17   010b                 lbsr   L016b 
+   64  0060 ec   a1        L0060      ldd    ,y++ 
+   65  0062 27   05                   beq    L0069 
+   66  0064 30   c4                   leax   ,u 
+   67  0066 17   0102                 lbsr   L016b 
+   68  0069 32   64        L0069      leas   4,s 
+   69  006B 35   10                   puls   x 
+   70  006D af   c9 0083              stx    D0083,u 
+   71  0071 10af c9 0043              sty    >D0043,u 
+   72  0076 cc   0001                 ldd    #1 
+   73  0079 ed   c9 007f              std    >D007f,u 
+   74  007D 31   c9 0045              leay   >D0045,u 
+   75  0081 30   e4                   leax   ,s 
+   76  0083 a6   80                   lda    ,x+ 
+   77  0085 e6   c9 0080   L0085      ldb    D0080,u 
+   78  0089 c1   1d                   cmpb   #$1d 
+   79  008B 27   54                   beq    L00e1 
+   80  008D 81   0d        L008d      cmpa   #$0d 
+   81  008F 27   50                   beq    L00e1 
+   82  0091 81   20                   cmpa   #$20 
+   83  0093 27   04                   beq    L0099 
+   84  0095 81   2c                   cmpa   #$2c 
+   85  0097 26   04                   bne    L009d 
+   86  0099 a6   80        L0099      lda    ,x+ 
+   87  009B 20   f0                   bra    L008d 
+   88  009D 81   22        L009d      cmpa   #$22 
+   89  009F 27   04                   beq    L00a5 
+   90  00A1 81   27                   cmpa   #$27 
+   91  00A3 26   1e                   bne    L00c3 
+   92  00A5 af   a1        L00a5      stx    ,y++ 
+   93  00A7 6c   c9 0080              inc    D0080,u 
+   94  00AB 34   02                   pshs   a 
+   95  00AD a6   80        L00ad      lda    ,x+ 
+   96  00AF 81   0d                   cmpa   #$0d 
+   97  00B1 27   04                   beq    L00b7 
+   98  00B3 a1   e4                   cmpa   ,s 
+   99  00B5 26   f6                   bne    L00ad 
+  100  00B7 35   04        L00b7      puls   b 
+  101  00B9 6f   1f                   clr    -1,x 
+  102  00BB 81   0d                   cmpa   #$0d 
+  103  00BD 27   22                   beq    L00e1 
+  104  00BF a6   80                   lda    ,x+ 
+  105  00C1 20   c2                   bra    L0085 
+  106  00C3 30   1f        L00c3      leax   -1,x 
+  107  00C5 af   a1                   stx    ,y++ 
+  108  00C7 30   01                   leax   1,x 
+  109  00C9 6c   c9 0080              inc    D0080,u 
+  110  00CD 81   0d        L00cd      cmpa   #$0d 
+  111  00CF 27   0c                   beq    L00dd 
+  112  00D1 81   20                   cmpa   #$20 
+  113  00D3 27   08                   beq    L00dd 
+  114  00D5 81   2c                   cmpa   #$2c 
+  115  00D7 27   04                   beq    L00dd 
+  116  00D9 a6   80                   lda    ,x+ 
+  117  00DB 20   f0                   bra    L00cd 
+  118  00DD 6f   1f        L00dd      clr    -1,x 
+  119  00DF 20   a4                   bra    L0085 
+
+
+
+
+
+OS9 Cross Disassembler - Ver. 0.9.1    09/30/2008 09:35:13      Page 003
+
+  120  00E1 30   c9 0043   L00e1      leax   >D0043,u 
+  121  00E5 34   10                   pshs   x 
+  122  00E7 ec   c9 007f              ldd    >D007f,u 
+  123  00EB 34   06                   pshs   d 
+  124  00ED 31   c4                   leay   ,u 
+  125  00EF 8d   0a                   bsr    L00fb 
+  126  00F1 17   0091                 lbsr   L0185 
+  127  00F4 6f   e2                   clr    ,-s 
+  128  00F6 6f   e2                   clr    ,-s 
+  129  00F8 17   008f                 lbsr   L018a 
+  130  00FB 30   a9 0095   L00fb      leax   149,y 
+  131  00FF af   a9 008d              stx    141,y 
+  132  0103 10ef a9 0081              sts    129,y 
+  133  0108 10ef a9 008f              sts    143,y 
+  134  010D cc   ff82                 ldd    #$ff82 
+  135  0110 1f   41                   tfr    s,x 
+  136  0112 34   10                   pshs   x 
+  137  0114 30   eb                   leax   d,s 
+  138  0116 ac   e1                   cmpx   ,s++ 
+  139  0118 22   2a                   bhi    L0144 
+  140  011A ac   a9 008f              cmpx   143,y 
+  141  011E 24   0a                   bcc    L012a 
+  142  0120 ac   a9 008d              cmpx   141,y 
+  143  0124 25   1e                   bcs    L0144 
+  144  0126 af   a9 008f              stx    143,y 
+  145  012A 39             L012a      rts     
+  146  012B 2a   2a        L012b      bpl    L0157 
+  147  012D 2a   2a                   bpl    L0159 
+  148  012F 20   53                   bra    L0184 
+  149  0131 54                        lsrb    
+  150  0132 41                        fcb    $41 
+  151  0133 43                        coma    
+  152  0134 4b                        fcb    $4b 
+  153  0135 20   4f                   bra    L0186 
+  154  0137 56                        rorb    
+  155  0138 45                        fcb    $45 
+  156  0139 52                        fcb    $52 
+  157  013A 46                        rora    
+  158  013B 4c                        inca    
+  159  013C 4f                        clra    
+  160  013D 57                        asrb    
+  161  013E 20   2a                   bra    L016a 
+  162  0140 2a   2a                   bpl    L016c 
+  163  0142 2a   0d                   bpl    L0151 
+  164  0144 30   8c e4     L0144      leax   <L012b,pcr 
+  165  0147 c6   cf                   ldb    #$cf 
+  166  0149 34   04                   pshs   b 
+  167  014B 86   02                   lda    #2 
+  168  014D 108e 0064                 ldy    #$0064 
+  169  0151 103f 8c        L0151      os9    I$WritLn 
+  170  0154 6f   e2                   clr    ,-s 
+  171  0156 17   0037                 lbsr   L0190 
+  172  0157                L0157      equ    *-2 
+  173  0159 ec   a9 0081   L0159      ldd    129,y 
+  174  015D a3   a9 008f              subd   143,y 
+  175  0161 39                        rts     
+  176  0162 ec   a9 008f              ldd    143,y 
+  177  0166 a3   a9 008d              subd   141,y 
+  178  016A 39             L016a      rts     
+
+
+
+
+
+OS9 Cross Disassembler - Ver. 0.9.1    09/30/2008 09:35:14      Page 004
+
+  179  016B 34   10        L016b      pshs   x 
+  180  016C                L016c      equ    *-1 
+  181  016D 30   ab                   leax   d,y 
+  182  016F 30   8b                   leax   d,x 
+  183  0171 34   10                   pshs   x 
+  184  0173 ec   a1        L0173      ldd    ,y++ 
+  185  0175 30   cb                   leax   d,u 
+  186  0177 ec   84                   ldd    ,x 
+  187  0179 e3   62                   addd   2,s 
+  188  017B ed   84                   std    ,x 
+  189  017D 10ac e4                   cmpy   ,s 
+  190  0180 26   f1                   bne    L0173 
+  191  0182 32   64                   leas   4,s 
+  192  0184 39             L0184      rts     
+  193  0185 17   0001      L0185      lbsr   L0189 
+  194  0186                L0186      equ    *-2 
+  195  0188 39                        rts     
+  196  0189 39             L0189      rts     
+  197  018A 17   0008      L018a      lbsr   etext 
+  198  018D 17   0006                 lbsr   L0196 
+  199  0190 ec   62        L0190      ldd    2,s 
+  200  0192 103f 06                   os9    F$Exit 
+  201  0195 39             etext      rts     
+  202  0196 39             L0196      rts     
+  203       * 
+  204       * First comes all init DP vars
+  205       * 
+  206  0197 001d                      fdb    29 
+  207       * L0199 should have been 0 for D0000
+  208  0199 04             L0199      fcb    $04 
+  209       * L019a should have been the string
+  210       * .                             "initdp file 1"
+  211       * 
+  212  019A 74 6e 6f 6e               fcc    "tnondp file 1" 
+  213  01A7 00                        fcb    $00 
+  214       * L01A8 should have been the string
+  215       * .                             "initdp file 2"
+  216       * 
+  217  01A8 74 6e 6f 6e               fcc    "tnondp file 2" 
+  218  01B5 00                        fcb    $00 
+  219       * 
+  220       * then all init NON-DP vars
+  221       * 
+  222  01B6 0022                      fdb    34 
+  223       * L01B8 should have been the string
+  224       * .                             "initnondp file 1"
+  225       * 
+  226  01B8 69 6e 69 74               fcc    "initdp file 1" 
+  227  01C5 00                        fcb    $00 
+  228       * L01C9 should have been the string
+  229       * .                             "initnondp file 2"
+  230       * 
+  231  01C6 69 6e 69 69               fcc    "iniinitdp file 2" 
+  232  01D6 00                        fcb    $00 
+  233  01D7 69 6e 69                  fcc    "ini" 
+  234  01DA 0000 0000                 fdb    0,0 
+  235  01DE 66 30 30 30               fcc    "f000tst" 
+  236  01E5 00                        fcb    $00 
+  237
+  238  01E6 26ed1b                    emod    
+  239
+  240  01E9                L01e9      equ    * 
+  241
+  242  01E9                           end     

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Quick and dirty compiler driver.
+# Usage: cc file.c
+
+export PATH=./:$PATH
+
+name=${1%%.*}
+
+echo "Preprocess.."
+coprep $1 > $name.m
+[ $? = 0 ] || exit 1
+
+echo "Compile.."
+co_comp $name.m > /tmp/$$.m
+[ $? = 0 ] || exit 1
+rm -f $name.m
+ 
+echo "Optimize.."
+co_opt /tmp/$$.m > $name.a
+[ $? = 0 ] || exit 1
+rm -f /tmp/$$.m
+
+echo "Asm.."
+rma $name.a -O=$name.r
+[ $? = 0 ] || exit 1
+rm -f $name.a
+
+# In real life, the user needs a way to pass in additional objects and
+# libraries.  This is just thrown together as a proof of concept.
+echo "Link.."
+rlink ./lib/cstart.r $name.r -l=./lib/clib.l -o=$name
+[ $? = 0 ] || exit 1
+rm -f $name.r
+
+echo "Done!"

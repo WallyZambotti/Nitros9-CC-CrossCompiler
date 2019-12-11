@@ -1,0 +1,28 @@
+* Disassembly by Os9disasm of clmove.r
+
+ psect clmove_a,$0,$0,1,0,_lmove 
+
+* ************************************************ *
+* _lmove - move a long from source to destination   *
+* .  Entry:  x => source                            *
+* .          dest on stack, prior to rts            *
+* .  Exit status: X = Dest                          *
+* ************************************************* *
+* 
+_lmove: pshs  y Save reg Y
+ ldy   4,s dest => y
+* 
+* Move data from source to dest
+* 
+ ldd   ,x 
+ std   ,y 
+ ldd   2,x 
+ std   2,y 
+ puls  x Pull Y-save
+ exg   y,x Restore y, X = Dest
+ puls  d Pull return off stack
+ std   ,s Replace "dest" with return
+ rts    
+
+ ends  
+

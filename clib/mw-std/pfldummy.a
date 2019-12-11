@@ -1,0 +1,45 @@
+* Disassembly by Os9disasm of pfldummy.r
+
+ psect pfldummy_c,$0,$0,1,0,pflong 
+
+* class D external label equates
+
+D006c equ $006c 
+
+ vsect  
+
+* Initialized Data (class G)
+G0000 fcb $6c 
+G0001 fcb $78 
+ fcb $00 
+
+ ends  
+
+
+pflong: pshs  u 
+ ldb   5,s 
+ sex    
+ tfr   d,x 
+ bra   L0026 
+L0009 ldd   [6,s] 
+ addd  #4 
+ std   [6,s] 
+ leax  >L003d,pcr 
+ bra   L0022 
+L0018 ldb   5,s 
+ stb   G0001,y 
+ leax  G0000,y 
+L0022 tfr   x,d 
+ puls  u,pc 
+L0026 cmpx  #$0064 
+ beq   L0009 
+ cmpx  #$006f 
+ lbeq  L0009 
+ cmpx  #$0078 
+ lbeq  L0009 
+ bra   L0018 
+ puls  u,pc 
+L003d fcb $00 
+
+ ends  
+

@@ -1,0 +1,64 @@
+* Disassembly by Os9disasm of system.r
+
+ psect system_c,$0,$0,2,0,system 
+
+* class D external label equates
+
+D0000 equ $0000 
+
+* class X external label equates
+
+X6865 equ $6865 
+
+system: pshs  u 
+ ldd   #$ff5a 
+ lbsr  _stkcheck 
+ leas  -86,s 
+ ldd   #$004f 
+ pshs  d 
+ ldd   92,s 
+ pshs  d 
+ leax  4,s 
+ pshs  x 
+ lbsr  strncpy 
+ leas  6,s 
+ leax  >L006e,pcr 
+ pshs  x 
+ leax  2,s 
+ pshs  x 
+ lbsr  strcat 
+ leas  4,s 
+ clra   
+ clrb   
+ pshs  d 
+ ldd   #1 
+ pshs  d 
+ ldd   #1 
+ pshs  d 
+ leax  6,s 
+ pshs  x 
+ leax  8,s 
+ pshs  x 
+ lbsr  strlen 
+ std   ,s 
+ leax  >L0070,pcr 
+ pshs  x 
+ lbsr  os9fork 
+ leas  12,s 
+ std   84,s 
+L0056 leax  80,s 
+ pshs  x 
+ lbsr  wait 
+ leas  2,s 
+ cmpd  84,s 
+ bne   L0056 
+ ldd   80,s 
+ leas  86,s 
+ puls  u,pc 
+L006e tst   D0000 
+L0070 com   X6865 
+ inc   12,s 
+ fcb $00 
+
+ ends  
+

@@ -1,0 +1,20 @@
+* Disassembly by Os9disasm of sleep.r
+
+ psect sleep_c,$0,$0,1,0,sleep 
+
+sleep: pshs  u 
+ ldd   4,s 
+ beq   L0012 
+ ldd   4,s 
+ pshs  d 
+ ldd   #$000a 
+ lbsr  ccmult 
+ bra   L0015 
+L0012 ldd   #1 
+L0015 pshs  d 
+ lbsr  tsleep 
+ leas  2,s 
+ puls  u,pc 
+
+ ends  
+

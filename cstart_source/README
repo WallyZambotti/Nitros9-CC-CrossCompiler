@@ -1,0 +1,21 @@
+The cstart source file is originally from:
+
+$NITROS9DIR/3rdparty/packages/cc/sources
+
+The os9defs file is from:
+
+$NITROS9DIR/3rdparty/libs/alib
+
+The cstart source needed some massaging:
+
+- Don't specify a path for the defs file.
+
+- Set language/type byte non-zero so linker will know 
+  that it's the main program.  The value will be set 
+  to $11 by the linker when it writes its output.
+
+- Change spelling of two symbols to agree with everything
+  else in the universe.
+
+Run build.sh to construct cstart.r and move it someplace
+where the linker can find it.

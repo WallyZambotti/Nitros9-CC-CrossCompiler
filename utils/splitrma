@@ -1,0 +1,81 @@
+#! /usr/bin/perl
+
+# "splitrma <os9disasm listing> - splits assembler source into
+#       rma-compatible files
+# The file needs to be specifically written.
+# Reads the file and discards until it encounters
+#       "Begin of part 1", exactly
+# The next line is a single comment and a space followed by the filename
+#       to write to.
+# It then writes a psect, then writes all non-comment lines until
+# it Finds "Begin of ".  An ends is written to that file
+# It then process the next section as above till another "Begin of "
+# When "End split " is encountered, it ends
+
+use strict;
+use warnings;
+
+# Process a single file section
+# return 1 if another "Begin" is encountered, 0 if "End"
+
+my $instrm;
+my $closeit;
+
+sub proc_file {
+    my $outpath;
+    my $status = 1;
+    my $fname = <$instrm>;
+    chomp $fname;
+    $fname =~ s/^\** *//;
+    $fname =~ s/ //g;
+    my $psctnam = $fname;
+    $psctnam =~ s/\./_/;
+
+    die "Cannot open $fname for write" unless (open $outpath, ">", $fname);
+
+    print $outpath " psect $psctnam,0,0,0,0,0\n";
+#    print $outpath " ifp1\n use ../../disassembly/defines.lbl\n endc\n";
+
+    while (<$instrm>) {
+        last if ($_ =~ /^\** *Begin of/);
+
+        if ($_ =~ /^\** *End split/) {
+            $status = 0;
+            last;
+        }
+
+        next if ($_ =~ /^\*/);
+        print $outpath $_;
+    }
+
+    print $outpath " endsect\n";
+    close $outpath;
+    $status = 0 if (eof $instrm);
+    return $status;
+}
+
+if (scalar @ARGV) {
+    unless (open ($instrm, $ARGV[0])) {
+        die "canot open $ARGV[0] for read\n";
+    }
+
+    $closeit = 1;
+}
+else {
+    no strict 'subs';
+    $instrm = STDIN;
+}
+
+while (<$instrm>) {
+    last if $_ =~ /^\** *Begin of part 1/;
+
+    if ($_ =~ /^\** *End split/) {
+        print STDERR "End split reached before data processed\n";
+    }
+}
+
+while (proc_file) {};
+
+if ($closeit) {
+    close $instrm;
+}

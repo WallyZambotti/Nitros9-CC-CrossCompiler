@@ -1,0 +1,10 @@
+* Disassembly by Os9disasm of swab.r
+
+ psect swab_a,$0,$0,1,0,swab 
+
+swab: ldd   2,s 
+ exg   a,b 
+ rts    
+
+ ends  
+

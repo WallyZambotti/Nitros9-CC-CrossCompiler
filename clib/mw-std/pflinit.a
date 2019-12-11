@@ -1,0 +1,354 @@
+* Disassembly by Os9disasm of pflinit.r
+
+ psect pflinit_c,$0,$0,1,0,pflinit 
+
+* class D external label equates
+
+D0000 equ $0000 
+D003b equ $003b 
+D00ff equ $00ff 
+
+* class X external label equates
+
+Xff35 equ $ff35 
+Xffff equ $ffff 
+
+ vsect  
+
+* Uninitialized data (class B)
+B0000 rmb 20 
+B0014 rmb 1 
+B0015 rmb 1 
+B0016 rmb 18 
+* Initialized Data (class G)
+G0000 fcb $3b 
+ fcb $9a 
+ fcb $ca 
+ fcb $00 
+ fcb $05 
+ fcb $f5 
+ fcb $e1 
+ fcb $00 
+ fcb $00 
+ fcb $98 
+ fcb $96 
+ fcb $80 
+ fcb $00 
+ fcb $0f 
+ fcb $42 
+ fcb $40 
+ fcb $00 
+ fcb $01 
+ fcb $86 
+ fcb $a0 
+ fcb $00 
+ fcb $00 
+ fcb $27 
+ fcb $10 
+ fcb $00 
+ fcb $00 
+ fcb $03 
+ fcb $e8 
+ fcb $00 
+ fcb $00 
+ fcb $00 
+ fcb $64 
+ fcb $00 
+ fcb $00 
+ fcb $00 
+ fcb $0a 
+G0024 fdb G0024 
+
+ ends  
+
+
+pflinit: pshs  u 
+ puls  u,pc 
+pflong: pshs  u 
+ ldb   5,s 
+ sex    
+ tfr   d,x 
+ lbra  L007d 
+L000e ldx   [6,s] 
+ leax  4,x 
+ stx   [6,s] 
+ leax  -4,x 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ lbsr  L00a1 
+ bra   L003a 
+L0025 ldx   [6,s] 
+ leax  4,x 
+ stx   [6,s] 
+ leax  -4,x 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ lbsr  L018f 
+L003a leas  4,s 
+ lbra  L0099 
+L003f ldb   5,s 
+ sex    
+ leax  _chcodes,y 
+ leax  d,x 
+ ldb   ,x 
+ clra   
+ andb  #2 
+ pshs  d 
+ ldx   [8,s] 
+ leax  4,x 
+ stx   [8,s] 
+ leax  -4,x 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ lbsr  L01f3 
+ leas  6,s 
+ bra   L0099 
+L0068 ldd   #$006c 
+ stb   B0014,y 
+ ldb   5,s 
+ stb   B0015,y 
+ clra   
+ clrb   
+ stb   B0016,y 
+ bra   L0099 
+L007d cmpx  #$0064 
+ lbeq  L000e 
+ cmpx  #$006f 
+ lbeq  L0025 
+ cmpx  #$0078 
+ beq   L003f 
+ cmpx  #$0058 
+ lbeq  L003f 
+ bra   L0068 
+L0099 leax  B0014,y 
+ tfr   x,d 
+ puls  u,pc 
+L00a1 pshs  d,u 
+ leax  B0014,y 
+ stx   ,s 
+ leax  6,s 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ bsr   L00b9 
+ neg   D0000 
+ neg   D0000 
+L00b9 puls  x 
+ lbsr  _lcmpr 
+ bge   L0100 
+ leax  6,s 
+ pshs  x 
+ leax  8,s 
+ lbsr  _lneg 
+ lbsr  _lmove 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ bsr   L00da 
+ neg   D0000 
+ neg   D0000 
+L00da puls  x 
+ lbsr  _lcmpr 
+ bge   L00f5 
+ leax  L0279,pcr 
+ pshs  x 
+ leax  B0014,y 
+ pshs  x 
+ lbsr  strcpy 
+ leas  4,s 
+ lbra  L01ef 
+L00f5 ldd   #$002d 
+ ldx   ,s 
+ leax  1,x 
+ stx   ,s 
+ stb   -1,x 
+L0100 leax  6,s 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ ldd   4,s 
+ pshs  d 
+ bsr   L0115 
+ leas  6,s 
+ lbra  L01ef 
+L0115 pshs  d,x,y,u 
+ ldu   10,s 
+ clra   
+ clrb   
+ std   2,s 
+ leax  G0000,y 
+ stx   4,s 
+ lbra  L0173 
+L0126 clra   
+ clrb   
+ std   ,s 
+ bra   L0147 
+L012c ldd   ,s 
+ addd  #1 
+ std   ,s 
+ leax  12,s 
+ pshs  x 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ ldx   10,s 
+ lbsr  _lsub 
+ lbsr  _lmove 
+L0147 leax  12,s 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ ldx   8,s 
+ lbsr  _lcmpr 
+ bge   L012c 
+ ldd   ,s 
+ beq   L0161 
+ ldd   #1 
+ std   2,s 
+L0161 ldd   2,s 
+ beq   L016c 
+ ldd   ,s 
+ addd  #$0030 
+ stb   ,u+ 
+L016c ldd   4,s 
+ addd  #4 
+ std   4,s 
+L0173 ldd   4,s 
+ cmpd  G0024,y 
+ lbne  L0126 
+ ldd   14,s 
+ addd  #$0030 
+ stb   ,u+ 
+ clra   
+ clrb   
+ stb   ,u 
+ ldd   10,s 
+ leas  6,s 
+ puls  u,pc 
+L018f pshs  d,u 
+ leax  B0014,y 
+ stx   ,s 
+ leau  B0000,y 
+L019b ldd   8,s 
+ clra   
+ andb  #7 
+ addd  #$0030 
+ stb   ,u+ 
+ leax  6,s 
+ pshs  x 
+ leax  8,s 
+ pshs  x 
+ ldd   #3 
+ lbsr  _lshr 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ bsr   L01c1 
+ fcb $1f 
+ stu   Xffff 
+L01c1 puls  x 
+ lbsr  _land 
+ lbsr  _lmove 
+ lda   ,x 
+ ora   1,x 
+ ora   2,x 
+ ora   3,x 
+ bne   L019b 
+ bra   L01df 
+L01d5 ldb   ,u 
+ ldx   ,s 
+ leax  1,x 
+ stx   ,s 
+ stb   -1,x 
+L01df leau  -1,u 
+ pshs  u 
+ leax  B0000,y 
+ cmpx  ,s++ 
+ bls   L01d5 
+ clra   
+ clrb   
+ stb   [,s] 
+L01ef leas  2,s 
+ puls  u,pc 
+L01f3 pshs  d,x,u 
+ leax  B0014,y 
+ stx   2,s 
+ leau  B0000,y 
+L01ff ldd   10,s 
+ clra   
+ andb  #$0f 
+ std   ,s 
+ pshs  d 
+ ldd   2,s 
+ cmpd  #9 
+ ble   L0221 
+ ldd   14,s 
+ beq   L0219 
+ ldd   #$0041 
+ bra   L021c 
+L0219 ldd   #$0061 
+L021c addd  #$fff6 
+ bra   L0224 
+L0221 ldd   #$0030 
+L0224 addd  ,s++ 
+ stb   ,u+ 
+ leax  8,s 
+ pshs  x 
+ leax  10,s 
+ pshs  x 
+ ldd   #4 
+ lbsr  _lshr 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ bsr   L0244 
+ clr   D00ff 
+ stu   Xff35 
+L0244 equ *-1
+ fcb $10 
+ lbsr  _land 
+ lbsr  _lmove 
+ lda   ,x 
+ ora   1,x 
+ ora   2,x 
+ ora   3,x 
+ lbne  L01ff 
+ bra   L0264 
+L025a ldb   ,u 
+ ldx   2,s 
+ leax  1,x 
+ stx   2,s 
+ stb   -1,x 
+L0264 leau  -1,u 
+ pshs  u 
+ leax  B0000,y 
+ cmpx  ,s++ 
+ bls   L025a 
+ clra   
+ clrb   
+ stb   [2,s] 
+ leas  4,s 
+ puls  u,pc 
+L0279 blt   L02ad 
+ leay  -12,y 
+ pulu  b,x,y 
+ fcb $38 
+ leau  -10,y 
+ pshs  dp,x,y 
+ fcb $00 
+
+ ends  
+

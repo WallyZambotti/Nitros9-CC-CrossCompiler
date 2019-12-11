@@ -1,0 +1,163 @@
+#! /usr/bin/perl
+
+# ######################################################################### #
+# make-case() - This is a utility to generate "C" case statememts from      #
+#       os9disasm (formatted) listing output.  It will generate the list    #
+#       of case statements, with the Destination label following, as a      #
+#       comment.                                                            #
+#       This is, of course, for a disassembly of a MW-C generated program   #
+#                                                                           #
+# The format for the parameters is as follows:                              #
+#       (1) - filename to read from                                         #
+#       (2) - The Line # to begin (the first "case")                        #
+#       (3) - case-type - The output type you wish for the case constant    #
+#             "asc" - (default) generates the ASCII value of the const      #
+#             "hex" - Generates hex value for constant                      #
+#             "dec" - Generates decimal value for constant                  #
+#                                                                           #
+# It does not include any "default:" (a "bra") that might be present.       #
+# Also, it only generates the "case:" lines. not the "switch" or braces     #
+# ######################################################################### #
+
+use strict;
+
+sub help()
+{
+    printf "Syntax: $0  <file-to-read> <start-line#>  [case-type]\n";
+    printf "        The line # is the line # seen in the listing, since\n";
+    printf "             there are headers and blank lines in most listings\n";
+    printf "        Case-type is optional, and can either be \"asc\",\n";
+    printf "             \"dec\", or \"hex\" - default is \"asc\"\n";
+    exit;
+}
+
+unless (scalar @ARGV >= 2) {
+    help();
+}
+
+my ($filename, $start, $casetype) = @ARGV;
+
+unless ($casetype =~ "dec" or $casetype =~ "hex" or $casetype =~ "asc") {
+    $casetype = "raw";
+}
+
+my $casefmt;
+
+if ($casetype =~ "asc") {
+    $casefmt = "case '%s':";
+}
+elsif ($casetype =~ "dec") {
+    $casefmt = "case %d: ";
+}
+elsif ($casetype =~ "hex") {
+    $casefmt = "case 0x%02x: ";
+}
+else {
+    $casefmt = "case %s:";
+}
+
+my $fp;
+
+unless (open $fp, $filename)
+{
+    die "Cannot open listing for read";
+}
+
+my %ctrlnms = (
+    nul  => 0, soh => 1, stx => 2, etx => 3,
+    eot => 4, enq => 5, ack => 6, bel => 7,
+    bs => 8, ht => 9, lf => 10, vt => 11,
+    ff => 12, cr => 13, so => 14, si => 15,
+    dle => 16, dcl => 17, dc2 => 18, dc3 => 19,
+    dc4 => 20, nak => 21, syn => 21, etb => 23,
+    can => 24, em => 25, "sub" =>26, esc => 27,
+    fs => 28, gs => 29, rs => 30, us => 31
+);
+
+my @ctrlstr;
+
+($ctrlstr[9], $ctrlstr[10], $ctrlstr[13]) = ('\t', '\n', '\r');
+my $case = "";
+my $dst = "";
+my ($val, $realval);
+    my $ndx;
+
+while (<$fp>) {
+
+    next if /(Cross Disassembler|^$)/;
+    my $lnno = substr ($_, 0, 5);
+
+    #last if ($lnno > $end);
+    next if ($lnno < $start);
+
+    # We have a valid line, process it
+
+    # On First line, get offset to asm cmd
+
+    if (!$ndx) {
+        if (($ndx = index ($_, "cmpx")) < 0) {
+            printf STDERR $_;
+            die ("String \"cmpx\" not on first line\n");
+        }
+    }
+
+    my ($cmp,$cmpval) = split " ",substr ($_, $ndx);
+
+    if ((length $case) == 0) {
+        last unless ($cmp =~ /cmpx/);
+
+        if ($casetype =~ "raw") {
+            $val = $cmpval;
+            $val =~ s/^#//;
+        }
+        else {
+            $cmpval =~ s/^#//;
+
+            if ($cmpval =~ /^\$/) {
+                $val = hex (substr $cmpval, 1);
+            }
+            elsif ($cmpval =~ /^'/) {
+                $val = ord (substr $cmpval, 1);
+            }
+            elsif ($cmpval =~ /^[[:digit:]]*$/) {
+                $val = $cmpval;
+            }
+            elsif ( exists $ctrlnms{$cmpval}) {
+                $val = $ctrlnms{$cmpval};
+            }
+
+            $realval = $val;
+        }
+
+        unless ($casetype =~ "asc") {
+            $case = sprintf $casefmt, $val;
+        }
+        else {
+            if ($val >= 32) {
+                $case = sprintf $casefmt, chr $val;
+            }
+            elsif (defined $ctrlstr[$val]) {
+                $case = sprintf "case '%s':", $ctrlstr[$val];
+            }
+            else {
+                $case = sprintf "case '\\x%x':", $val;
+            }
+        }
+    }
+    else {
+         unless ($cmp =~ /beq/) {
+             die "Error:  Case statement without branch\n";
+         }
+
+        unless ($casetype =~ "asc" or $casetype =~ "raw") {
+            if ($realval >= 32) {
+                $cmpval .= sprintf " */  /* '%s'", chr $realval;
+            }
+        }
+
+        printf "%-18s /* %s */\n", $case, $cmpval;
+        $case = "";                 # reset for next "case"
+    }
+}
+
+close $fp;

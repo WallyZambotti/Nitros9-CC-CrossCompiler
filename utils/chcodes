@@ -1,0 +1,53 @@
+#! /usr/bin/perl
+
+my $fh;
+
+unless (open $fh, "codeslist") {
+    die "Cannot open input file";
+}
+
+my @names;
+
+($names[9], $names[10], $names[13]) = ('\t','\n','\r');
+
+my $ch = 0;
+
+while (<$fh>) {
+    chomp;
+
+    $_ =~ s/,$//;
+    @ar = split ",";
+
+    while (length (my $h = shift @ar)) {
+        my $v = hex $h;
+        my @bit = ();
+        my $char;
+
+        for (7,6,5,4,3,2,1,0) {
+            if ($v & 2**$_) {
+                push @bit, "1";
+            }
+            else {
+                push @bit, "-";
+            }
+
+            if ($_ == 4) {
+                push @bit, " ";
+            }
+        }
+
+        if ($ch >= 32) {
+            $char = chr $ch;
+        }
+        elsif (defined $names[$ch]) {
+            $char = $names[$ch];
+        }
+        else {
+            $char = sprintf "\\0x%02x", $ch;
+        }
+    
+        printf "%02x  %5s   %s   \$%02x\n", $ch, $char, join (" ",@bit), $v;
+    
+        ++$ch;
+    }
+}

@@ -1,0 +1,332 @@
+--- ./ccsources/c.comp/Makefile.orig	2008-10-04 16:08:00.000000000 -0400
++++ ./ccsources/c.comp/Makefile	2008-12-28 11:29:31.000000000 -0500
+@@ -1,5 +1,5 @@
+-CFLAGS = -g -Wall
+-LFLAGS = -g -Wall -o co_comp
++CFLAGS = -m32 -g -Wall
++LFLAGS = -m32 -g -Wall -o co_comp
+ 
+ RELS = comp_01.o comp_02.o comp_03.o comp_04.o comp_05.o comp_06.o\
+ 	   comp_07.o comp_08.o comp_09.o comp_10.o comp_11.o comp_12.o\
+--- ./ccsources/c.opt/Makefile.orig	2008-10-02 12:53:00.000000000 -0400
++++ ./ccsources/c.opt/Makefile	2008-12-28 11:30:09.000000000 -0500
+@@ -1,4 +1,4 @@
+-CFLAGS = -g -Wall
++CFLAGS = -m32 -g -Wall
+ #CFLAGS = -g
+ 
+ RELS = opt01.o opt02.o opt03.o opt04.o opt05.o opt06.o
+--- ./ccsources/cprep19/Makefile.orig	2008-10-02 12:53:00.000000000 -0400
++++ ./ccsources/cprep19/Makefile	2008-12-28 11:31:05.000000000 -0500
+@@ -1,9 +1,9 @@
+ RELS =cp.o cp1.o cp2.o cp3.o cp4.o solve.o
+ 
+-CFLAGS = -g -I.
++CFLAGS = -m32 -g -I.
+ 
+ coprep: $(RELS)
+-	gcc $(RELS) -o $@
++	gcc -m32 $(RELS) -o $@
+ 
+ $(RELS): cp.h
+ 
+--- ./clib/kreiderclib/fflush.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/fflush.a	2008-12-29 17:55:35.000000000 -0500
+@@ -4,5 +4,5 @@
+ 
+ fflush: rts    
+ 
+-fflush: ends  
++ ends  
+ 
+--- ./clib/kreiderclib/setbase.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/setbase.a	2008-12-29 17:55:59.000000000 -0500
+@@ -55,5 +55,5 @@
+  std   ,u 
+ L006c puls  u,pc 
+ 
+-L006c ends  
++ ends  
+ 
+--- ./clib/kreiderclib/system.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/system.a	2008-12-29 17:56:33.000000000 -0500
+@@ -54,5 +54,5 @@
+  inc   12,s 
+ L0066 tst   D0000 
+ 
+-L0066 ends  
++ ends  
+ 
+--- ./clib/kreiderclib/strncmp.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/strncmp.a	2008-12-29 17:56:54.000000000 -0500
+@@ -22,5 +22,5 @@
+  clrb   
+ L0021 puls  y,u,pc 
+ 
+-L0021 ends  
++ ends  
+ 
+--- ./clib/kreiderclib/strtok.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/strtok.a	2008-12-29 17:57:22.000000000 -0500
+@@ -39,5 +39,5 @@
+  stx   G0000,y 
+ L003a puls  d,u,pc 
+ 
+-L003a ends  
++ ends  
+ 
+--- ./clib/kreiderclib/strnucmp.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/strnucmp.a	2008-12-29 17:57:42.000000000 -0500
+@@ -32,5 +32,5 @@
+  clrb   
+ L0037 puls  y,u,pc 
+ 
+-L0037 ends  
++ ends  
+ 
+--- ./clib/kreiderclib/strucmp.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/strucmp.a	2008-12-29 17:58:05.000000000 -0500
+@@ -25,5 +25,5 @@
+  beq   L0008 
+ L002a puls  u,pc 
+ 
+-L002a ends  
++ ends  
+ 
+--- ./clib/kreiderclib/memccpy.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/memccpy.a	2008-12-29 17:58:45.000000000 -0500
+@@ -18,5 +18,5 @@
+ L001b tfr   y,d 
+ L001d puls  y,u,pc 
+ 
+-L001d ends  
++ ends  
+ 
+--- ./clib/kreiderclib/memcmp.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/memcmp.a	2008-12-29 17:59:34.000000000 -0500
+@@ -21,5 +21,5 @@
+  clrb   
+ L001f puls  y,u,pc 
+ 
+-L001f ends  
++ ends  
+ 
+--- ./clib/kreiderclib/abort.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/abort.a	2008-12-29 18:09:16.000000000 -0500
+@@ -58,5 +58,5 @@
+  os9 I$Write 
+ L0075 rts    
+ 
+-L0075 ends  
++ ends  
+ 
+--- ./clib/kreiderclib/gs2.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/gs2.a	2008-12-29 18:09:12.000000000 -0500
+@@ -39,5 +39,5 @@
+  puls  y 
+ L0042 lbra  _sysret 
+ 
+-L0042 ends  
++ ends  
+ 
+--- ./clib/kreiderclib/minmax.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/minmax.a	2008-12-29 18:09:10.000000000 -0500
+@@ -13,5 +13,5 @@
+  ldd   4,s 
+ L0013 rts    
+ 
+-L0013 ends  
++ ends  
+ 
+--- ./clib/kreiderclib/realloc.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/realloc.a	2008-12-29 18:09:08.000000000 -0500
+@@ -34,5 +34,5 @@
+  puls  d 
+ L003d puls  d,y,u,pc 
+ 
+-L003d ends  
++ ends  
+ 
+--- ./clib/kreiderclib/strass.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/strass.a	2008-12-29 18:09:06.000000000 -0500
+@@ -20,5 +20,5 @@
+  bne   L0017 
+ L001f puls  y,u,pc 
+ 
+-L001f ends  
++ ends  
+ 
+--- ./clib/kreiderclib/profdummy.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/profdummy.a	2008-12-29 18:12:15.000000000 -0500
+@@ -4,5 +4,5 @@
+ 
+ _dumprof: rts    
+ 
+-_dumprof: ends  
++ ends  
+ 
+--- ./clib/kreiderclib/abs.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/abs.a	2008-12-29 18:09:14.000000000 -0500
+@@ -9,5 +9,5 @@
+  sbca  #0 
+ L0008 rts    
+ 
+-L0008 ends  
++ ends  
+ 
+--- ./clib/kreiderclib/uminmax.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/uminmax.a	2008-12-29 18:09:04.000000000 -0500
+@@ -13,5 +13,5 @@
+  ldd   4,s 
+ L0013 rts    
+ 
+-L0013 ends  
++ ends  
+ 
+--- ./clib/kreiderclib/sleep.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/sleep.a	2008-12-29 18:11:41.000000000 -0500
+@@ -7,7 +7,7 @@
+ F$ID equ $0c 
+ F$SUser equ $1c 
+ F$NMLink equ $21 
+-!0025 equ $25 
++L0025 equ $25 
+ 
+ L0000 fcb $61 
+  fcb $62 
+@@ -18,7 +18,7 @@
+  ldd   #1 
+  bra   L003a 
+ L000d pshs  d 
+- os9 !0025 
++ os9 L0025 
+  bcc   L0037 
+  clra   
+  os9 F$ID 
+--- ./clib/kreiderclib/tidyup.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/tidyup.a	2008-12-29 18:12:35.000000000 -0500
+@@ -4,5 +4,5 @@
+ 
+ _tidyup: rts    
+ 
+-_tidyup: ends  
++ ends  
+ 
+--- ./clib/kreiderclib/atoi.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/atoi.a	2008-12-29 17:59:56.000000000 -0500
+@@ -47,5 +47,5 @@
+  sbca  #0 
+ L004b puls  u,pc 
+ 
+-L004b ends  
++ ends  
+ 
+--- ./clib/kreiderclib/memchr.a.orig	2008-09-25 12:42:00.000000000 -0400
++++ ./clib/kreiderclib/memchr.a	2008-12-29 17:59:17.000000000 -0500
+@@ -18,5 +18,5 @@
+  clrb   
+ L001a puls  x,u,pc 
+ 
+-L001a ends  
++ ends  
+ 
+--- ./clib/mw-std/fopen.a.orig	2008-03-13 14:00:00.000000000 -0400
++++ ./clib/mw-std/fopen.a	2008-12-28 11:57:33.000000000 -0500
+@@ -201,5 +201,5 @@
+  leas  6,s 
+ L01a6 puls  u,pc 
+ 
+-L01a6 ends  
++ ends  
+ 
+--- ./clib/mw-std/case.a.orig	2008-03-13 14:00:00.000000000 -0400
++++ ./clib/mw-std/case.a	2008-12-28 12:15:36.000000000 -0500
+@@ -28,5 +28,5 @@
+ L002f ldd   4,s 
+ L0031 puls  u,pc 
+ 
+-L0031 ends  
++ ends  
+ 
+--- ./clib/mw-std/getc.a.orig	2008-03-13 14:00:00.000000000 -0400
++++ ./clib/mw-std/getc.a	2008-12-28 12:16:19.000000000 -0500
+@@ -159,5 +159,5 @@
+ L0150 leas  2,s 
+ L0152 puls  u,pc 
+ 
+-L0152 ends  
++ ends  
+ 
+--- ./clib/mw-std/abs.a.orig	2008-03-13 14:00:00.000000000 -0400
++++ ./clib/mw-std/abs.a	2008-12-28 12:16:49.000000000 -0500
+@@ -9,5 +9,5 @@
+  sbca  #0 
+ L0008 rts    
+ 
+-L0008 ends  
++ ends  
+ 
+--- ./clib/mw-std/abort.a.orig	2008-03-13 14:00:00.000000000 -0400
++++ ./clib/mw-std/abort.a	2008-12-28 12:17:11.000000000 -0500
+@@ -58,5 +58,5 @@
+  os9 I$Write 
+ L0075 rts    
+ 
+-L0075 ends  
++ ends  
+ 
+--- ./clib/mw-std/profdummy.a.orig	2008-03-13 14:01:00.000000000 -0400
++++ ./clib/mw-std/profdummy.a	2008-12-28 12:17:39.000000000 -0500
+@@ -4,5 +4,5 @@
+ 
+ _dumprof: rts    
+ 
+-_dumprof: ends  
++ ends  
+ 
+--- ./clib/mw-std/tidyup.a.orig	2008-03-13 14:01:00.000000000 -0400
++++ ./clib/mw-std/tidyup.a	2008-12-28 12:18:02.000000000 -0500
+@@ -4,5 +4,5 @@
+ 
+ _tidyup: rts    
+ 
+-_tidyup: ends  
++ ends  
+ 
+--- ./clib/mw-std/Makefile.orig	2008-10-02 13:07:00.000000000 -0400
++++ ./clib/mw-std/Makefile	2008-12-29 18:18:13.000000000 -0500
+@@ -1,16 +1,26 @@
+-SRCDIR = source
+ AS = rma
+ 
+-# Temporarily make tmpdir ..
+-LIBDIR = ..
++%.r: %.a 
++	$(AS) $(ASFLAGS) $< -O=$@
+ 
+-%.r: $(SRCDIR)/%.a
+-	$(AS) $(ASFLAGS) $< -o $@
++SRCFILES = prof.r defdrive.r pffinit.r pflinit.r fopen.r puts.r \
++           gets.r mktemp.r fread.r fwrite.r printf.r scanf.r setbuf.r \
++	   fseek.r putc.r ftelldummy.r case.r getc.r flshdummy.r setbase.r \
++	   findstr.r pfldummy.r pffdummy.r atof.r scale.r system.r strings.r \
++	   stringsn.r index.r atol.r atoi.r iob_data.r chcodes.r l3tol.r \
++	   ltol3.r sleep.r qsort.r setjmp.r strass.r abs.r memory.r cfloats.r \
++	   clmul.r cldiv.r claddsub.r clcompare.r clbits.r clnegcompl.r \
++	   clconvert.r clmove.r clincdec.r clshifts.r clcommon.r ccmult.r \
++	   ccmod.r ccdiv.r cshifts.r rpterr.r abort.r signal.r change.r stat.r \
++	   access.r io.r misc.r mod.r dir.r mem.r time.r process.r id.r intercept.r \
++	   syscall.r syscommon.r cfinish.r profdummy.r tidyup.r 
+ 
+-prof.r defdrive.r pffinit.r pflinit.r fopen.r puts.r gets.r mktemp.r fread.r fwrite.r printf.r scanf.r setbuf.r fseek.r putc.r ftelldummy.r case.r getc.r flshdummy.r setbase.r findstr.r pfldummy.r pffdummy.r atof.r scale.r system.r strings.r stringsn.r index.r atol.r atoi.r iobata_c.r chcodes.r l3tol.r ltol3.r sleep.r qsort.r setjmp.r strass.r abs.r memory.r cfloats.r clmul.r cldiv.r claddsub.r clcompare.r clbits.r clnegcompl.r clconvert.r clmove.r clincdec.r clshifts.r clcommon.r ccmult.r ccmod.r ccdiv.r cshifts.r rpterr.r abort.r signal.r change.r stat.r access.r io.r misc.r mod.r dir.r mem.r time.r process.r id.r intercept.r syscall.r syscommon.r cfinish.r profdummy.r tidyup.r 
+ 
+-$(LIBDIR)/clib.l: $(SRCFILES)
+-#	@cat $(SRCFILES) >$(LIBDIR)/clib.l
++clib.l: $(SRCFILES)
++	@cat $(SRCFILES) >clib.l
+ 	@echo didit
+ 
+ $(SRCFILES):
++
++clean:
++	rm -f *.r clib.l

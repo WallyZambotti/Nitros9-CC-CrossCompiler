@@ -1,0 +1,41 @@
+* Disassembly by Os9disasm of index.r
+
+ psect index_c,$0,$0,1,0,index 
+
+index: pshs  u 
+ ldu   4,s 
+ bra   L0010 
+L0006 ldb   ,u 
+ sex    
+ cmpd  6,s 
+ beq   L0031 
+ leau  1,u 
+L0010 ldb   ,u 
+ bne   L0006 
+ bra   L003e 
+rindex: pshs  u 
+ ldu   4,s 
+ bra   L001e 
+L001c leau  1,u 
+L001e ldb   ,u 
+ bne   L001c 
+ bra   L0035 
+L0024 ldb   ,u 
+ sex    
+ pshs  d 
+ ldb   9,s 
+ sex    
+ cmpd  ,s++ 
+ bne   L0035 
+L0031 tfr   u,d 
+ puls  u,pc 
+L0035 tfr   u,d 
+ leau  -1,u 
+ cmpd  4,s 
+ bne   L0024 
+L003e clra   
+ clrb   
+ puls  u,pc 
+
+ ends  
+

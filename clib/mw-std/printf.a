@@ -1,0 +1,597 @@
+* Disassembly by Os9disasm of printf.r
+
+ psect printf_c,$0,$0,2,0,printf 
+
+* ASCII control character equates
+
+nul equ $00 
+
+ vsect  
+
+* Uninitialized data (class B)
+pf_out rmb 2 
+B0002 rmb 10 
+B000c rmb 10 
+B0016 rmb 2 
+B0018 rmb 2 
+* Initialized Data (class G)
+G0000 fcb $27 
+ fcb $10 
+ fcb $03 
+ fcb $e8 
+ fcb $00 
+ fcb $64 
+ fcb $00 
+ fcb $0a 
+G0008 fdb G0008 
+
+ ends  
+
+
+printf: pshs  u 
+ leax  _iob+13,y 
+ stx   pf_out,y 
+ leax  6,s 
+ pshs  x 
+ ldd   6,s 
+ bra   L0020 
+fprintf: pshs  u 
+ ldd   4,s 
+ std   pf_out,y 
+ leax  8,s 
+ pshs  x 
+ ldd   8,s 
+L0020 pshs  d 
+ leax  sendchar,pcr 
+ pshs  x 
+ bsr   L0052 
+ leas  6,s 
+ puls  u,pc 
+sprintf: pshs  u 
+ ldd   4,s 
+ std   pf_out,y 
+ leax  8,s 
+ pshs  x 
+ ldd   8,s 
+ pshs  d 
+ leax  L04eb,pcr 
+ pshs  x 
+ bsr   L0052 
+ leas  6,s 
+ clra   
+ clrb   
+ stb   [pf_out,y] 
+ ldd   4,s 
+ puls  u,pc 
+L0052 pshs  u 
+ ldu   6,s 
+ leas  -11,s 
+ bra   L006a 
+L005a ldb   8,s 
+ lbeq  L029b 
+ ldb   8,s 
+ sex    
+ pshs  d 
+ jsr   [17,s] 
+ leas  2,s 
+L006a ldb   ,u+ 
+ stb   8,s 
+ cmpb  #$25 
+ bne   L005a 
+ ldb   ,u+ 
+ stb   8,s 
+ clra   
+ clrb   
+ std   2,s 
+ std   6,s 
+ ldb   8,s 
+ cmpb  #$2d 
+ bne   L008f 
+ ldd   #1 
+ std   B0016,y 
+ ldb   ,u+ 
+ stb   8,s 
+ bra   L0095 
+L008f clra   
+ clrb   
+ std   B0016,y 
+L0095 ldb   8,s 
+ cmpb  #$30 
+ bne   L00a0 
+ ldd   #$0030 
+ bra   L00a3 
+L00a0 ldd   #$0020 
+L00a3 std   B0018,y 
+ bra   L00c3 
+L00a9 ldd   6,s 
+ pshs  d 
+ ldd   #$000a 
+ lbsr  ccmult 
+ pshs  d 
+ ldb   10,s 
+ sex    
+ addd  #$ffd0 
+ addd  ,s++ 
+ std   6,s 
+ ldb   ,u+ 
+ stb   8,s 
+L00c3 ldb   8,s 
+ sex    
+ leax  _chcodes,y 
+ leax  d,x 
+ ldb   ,x 
+ clra   
+ andb  #8 
+ bne   L00a9 
+ ldb   8,s 
+ cmpb  #$2e 
+ bne   L010c 
+ ldd   #1 
+ std   4,s 
+ bra   L00f6 
+L00e0 ldd   2,s 
+ pshs  d 
+ ldd   #$000a 
+ lbsr  ccmult 
+ pshs  d 
+ ldb   10,s 
+ sex    
+ addd  #$ffd0 
+ addd  ,s++ 
+ std   2,s 
+L00f6 ldb   ,u+ 
+ stb   8,s 
+ ldb   8,s 
+ sex    
+ leax  _chcodes,y 
+ leax  d,x 
+ ldb   ,x 
+ clra   
+ andb  #8 
+ bne   L00e0 
+ bra   L0110 
+L010c clra   
+ clrb   
+ std   4,s 
+L0110 ldb   8,s 
+ sex    
+ tfr   d,x 
+ lbra  L023e 
+L0118 ldd   6,s 
+ pshs  d 
+ ldx   21,s 
+ leax  2,x 
+ stx   21,s 
+ ldd   -2,x 
+ pshs  d 
+ lbsr  L029f 
+ bra   L0140 
+L012d ldd   6,s 
+ pshs  d 
+ ldx   21,s 
+ leax  2,x 
+ stx   21,s 
+ ldd   -2,x 
+ pshs  d 
+ lbsr  L035c 
+L0140 std   ,s 
+ lbra  L0224 
+L0145 ldd   6,s 
+ pshs  d 
+ ldb   10,s 
+ sex    
+ leax  _chcodes,y 
+ leax  d,x 
+ ldb   ,x 
+ clra   
+ andb  #2 
+ pshs  d 
+ ldx   23,s 
+ leax  2,x 
+ stx   23,s 
+ ldd   -2,x 
+ pshs  d 
+ lbsr  L03a4 
+ lbra  L0220 
+L016b ldd   6,s 
+ pshs  d 
+ ldx   21,s 
+ leax  2,x 
+ stx   21,s 
+ ldd   -2,x 
+ pshs  d 
+ leax  B0002,y 
+ pshs  x 
+ lbsr  L02e3 
+ lbra  L0220 
+L0187 ldd   4,s 
+ bne   L0190 
+ ldd   #6 
+ std   2,s 
+L0190 ldd   6,s 
+ pshs  d 
+ leax  21,s 
+ pshs  x 
+ ldd   6,s 
+ pshs  d 
+ ldb   14,s 
+ sex    
+ pshs  d 
+ lbsr  pffloat 
+ leas  6,s 
+ lbra  L0222 
+L01aa ldx   19,s 
+ leax  2,x 
+ stx   19,s 
+ ldd   -2,x 
+ lbra  L0234 
+L01b7 ldx   19,s 
+ leax  2,x 
+ stx   19,s 
+ ldd   -2,x 
+ std   9,s 
+ ldd   4,s 
+ beq   L01ff 
+ ldd   9,s 
+ std   4,s 
+ bra   L01d9 
+L01cd ldb   [9,s] 
+ beq   L01e5 
+ ldd   9,s 
+ addd  #1 
+ std   9,s 
+L01d9 ldd   2,s 
+ addd  #-1 
+ std   2,s 
+ subd  #-1 
+ bne   L01cd 
+L01e5 ldd   6,s 
+ pshs  d 
+ ldd   11,s 
+ subd  6,s 
+ pshs  d 
+ ldd   8,s 
+ pshs  d 
+ ldd   21,s 
+ pshs  d 
+ lbsr  L040f 
+ leas  8,s 
+ bra   L022e 
+L01ff ldd   6,s 
+ pshs  d 
+ ldd   11,s 
+ bra   L0222 
+L0207 ldb   ,u+ 
+ stb   8,s 
+ bra   L020f 
+ leas  -11,x 
+L020f ldd   6,s 
+ pshs  d 
+ leax  21,s 
+ pshs  x 
+ ldb   12,s 
+ sex    
+ pshs  d 
+ lbsr  pflong 
+L0220 leas  4,s 
+L0222 pshs  d 
+L0224 ldd   19,s 
+ pshs  d 
+ lbsr  L0471 
+ leas  6,s 
+L022e lbra  L006a 
+L0231 ldb   8,s 
+ sex    
+L0234 pshs  d 
+ jsr   [17,s] 
+ leas  2,s 
+ lbra  L006a 
+L023e cmpx  #$0064 
+ lbeq  L0118 
+ cmpx  #$006f 
+ lbeq  L012d 
+ cmpx  #$0078 
+ lbeq  L0145 
+ cmpx  #$0058 
+ lbeq  L0145 
+ cmpx  #$0075 
+ lbeq  L016b 
+ cmpx  #$0066 
+ lbeq  L0187 
+ cmpx  #$0065 
+ lbeq  L0187 
+ cmpx  #$0067 
+ lbeq  L0187 
+ cmpx  #$0045 
+ lbeq  L0187 
+ cmpx  #$0047 
+ lbeq  L0187 
+ cmpx  #$0063 
+ lbeq  L01aa 
+ cmpx  #$0073 
+ lbeq  L01b7 
+ cmpx  #$006c 
+ lbeq  L0207 
+ bra   L0231 
+L029b leas  11,s 
+ puls  u,pc 
+L029f pshs  d,u 
+ leax  B0002,y 
+ stx   ,s 
+ ldd   6,s 
+ bge   L02d4 
+ ldd   6,s 
+ nega   
+ negb   
+ sbca  #0 
+ std   6,s 
+ bge   L02c9 
+ leax  L04fd,pcr 
+ pshs  x 
+ leax  B0002,y 
+ pshs  x 
+ lbsr  strcpy 
+ leas  4,s 
+ lbra  L03a0 
+L02c9 ldd   #$002d 
+ ldx   ,s 
+ leax  1,x 
+ stx   ,s 
+ stb   -1,x 
+L02d4 ldd   6,s 
+ pshs  d 
+ ldd   2,s 
+ pshs  d 
+ bsr   L02e3 
+ leas  4,s 
+ lbra  L039a 
+L02e3 pshs  d,x,y,u 
+ ldu   10,s 
+ clra   
+ clrb   
+ std   2,s 
+ clra   
+ clrb   
+ std   ,s 
+ bra   L0300 
+L02f1 ldd   ,s 
+ addd  #1 
+ std   ,s 
+ ldd   12,s 
+ subd  G0000,y 
+ std   12,s 
+L0300 ldd   12,s 
+ blt   L02f1 
+ leax  G0000,y 
+ stx   4,s 
+ bra   L0342 
+L030c ldd   ,s 
+ addd  #1 
+ std   ,s 
+L0313 ldd   12,s 
+ subd  [4,s] 
+ std   12,s 
+ bge   L030c 
+ ldd   12,s 
+ addd  [4,s] 
+ std   12,s 
+ ldd   ,s 
+ beq   L032c 
+ ldd   #1 
+ std   2,s 
+L032c ldd   2,s 
+ beq   L0337 
+ ldd   ,s 
+ addd  #$0030 
+ stb   ,u+ 
+L0337 clra   
+ clrb   
+ std   ,s 
+ ldd   4,s 
+ addd  #2 
+ std   4,s 
+L0342 ldd   4,s 
+ cmpd  G0008,y 
+ bne   L0313 
+ ldd   12,s 
+ addd  #$0030 
+ stb   ,u+ 
+ clra   
+ clrb   
+ stb   ,u 
+ ldd   10,s 
+ leas  6,s 
+ puls  u,pc 
+L035c pshs  d,u 
+ leax  B0002,y 
+ stx   ,s 
+ leau  B000c,y 
+L0368 ldd   6,s 
+ clra   
+ andb  #7 
+ addd  #$0030 
+ stb   ,u+ 
+ ldd   6,s 
+ lsra   
+ rorb   
+ lsra   
+ rorb   
+ lsra   
+ rorb   
+ std   6,s 
+ bne   L0368 
+ bra   L038a 
+L0380 ldb   ,u 
+ ldx   ,s 
+ leax  1,x 
+ stx   ,s 
+ stb   -1,x 
+L038a leau  -1,u 
+ pshs  u 
+ leax  B000c,y 
+ cmpx  ,s++ 
+ bls   L0380 
+ clra   
+ clrb   
+ stb   [,s] 
+L039a leax  B0002,y 
+ tfr   x,d 
+L03a0 leas  2,s 
+ puls  u,pc 
+L03a4 pshs  d,x,u 
+ leax  B0002,y 
+ stx   2,s 
+ leau  B000c,y 
+L03b0 ldd   8,s 
+ clra   
+ andb  #$0f 
+ std   ,s 
+ pshs  d 
+ ldd   2,s 
+ cmpd  #9 
+ ble   L03d2 
+ ldd   12,s 
+ beq   L03ca 
+ ldd   #$0041 
+ bra   L03cd 
+L03ca ldd   #$0061 
+L03cd addd  #$fff6 
+ bra   L03d5 
+L03d2 ldd   #$0030 
+L03d5 addd  ,s++ 
+ stb   ,u+ 
+ ldd   8,s 
+ lsra   
+ rorb   
+ lsra   
+ rorb   
+ lsra   
+ rorb   
+ lsra   
+ rorb   
+ anda  #$0f 
+ std   8,s 
+ bne   L03b0 
+ bra   L03f5 
+L03eb ldb   ,u 
+ ldx   2,s 
+ leax  1,x 
+ stx   2,s 
+ stb   -1,x 
+L03f5 leau  -1,u 
+ pshs  u 
+ leax  B000c,y 
+ cmpx  ,s++ 
+ bls   L03eb 
+ clra   
+ clrb   
+ stb   [2,s] 
+ leax  B0002,y 
+ tfr   x,d 
+ lbra  L04e7 
+L040f pshs  u 
+ ldu   6,s 
+ ldd   10,s 
+ subd  8,s 
+ std   10,s 
+ ldd   B0016,y 
+ bne   L0444 
+ bra   L042c 
+L0421 ldd   B0018,y 
+ pshs  d 
+ jsr   [6,s] 
+ leas  2,s 
+L042c ldd   10,s 
+ addd  #-1 
+ std   10,s 
+ subd  #-1 
+ bgt   L0421 
+ bra   L0444 
+L043a ldb   ,u+ 
+ sex    
+ pshs  d 
+ jsr   [6,s] 
+ leas  2,s 
+L0444 ldd   8,s 
+ addd  #-1 
+ std   8,s 
+ subd  #-1 
+ bne   L043a 
+ ldd   B0016,y 
+ beq   L046f 
+ bra   L0463 
+L0458 ldd   B0018,y 
+ pshs  d 
+ jsr   [6,s] 
+ leas  2,s 
+L0463 ldd   10,s 
+ addd  #-1 
+ std   10,s 
+ subd  #-1 
+ bgt   L0458 
+L046f puls  u,pc 
+L0471 pshs  u 
+ ldu   6,s 
+ ldd   8,s 
+ pshs  d 
+ pshs  u 
+ lbsr  strlen 
+ leas  2,s 
+ nega   
+ negb   
+ sbca  #0 
+ addd  ,s++ 
+ std   8,s 
+ ldd   B0016,y 
+ bne   L04b3 
+ bra   L049b 
+L0490 ldd   B0018,y 
+ pshs  d 
+ jsr   [6,s] 
+ leas  2,s 
+L049b ldd   8,s 
+ addd  #-1 
+ std   8,s 
+ subd  #-1 
+ bgt   L0490 
+ bra   L04b3 
+L04a9 ldb   ,u+ 
+ sex    
+ pshs  d 
+ jsr   [6,s] 
+ leas  2,s 
+L04b3 ldb   ,u 
+ bne   L04a9 
+ ldd   B0016,y 
+ beq   L04d6 
+ bra   L04ca 
+L04bf ldd   B0018,y 
+ pshs  d 
+ jsr   [6,s] 
+ leas  2,s 
+L04ca ldd   8,s 
+ addd  #-1 
+ std   8,s 
+ subd  #-1 
+ bgt   L04bf 
+L04d6 puls  u,pc 
+sendchar pshs  u 
+ ldd   pf_out,y 
+ pshs  d 
+ ldd   6,s 
+ pshs  d 
+ lbsr  putc 
+L04e7 leas  4,s 
+ puls  u,pc 
+L04eb pshs  u 
+ ldd   4,s 
+ ldx   pf_out,y 
+ leax  1,x 
+ stx   pf_out,y 
+ stb   -1,x 
+ puls  u,pc 
+L04fd fcc "-32768" 
+ fcb nul 
+
+ ends  
+

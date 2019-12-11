@@ -1,0 +1,70 @@
+* Disassembly by Os9disasm of gets.r
+
+ psect gets_c,$0,$0,1,0,gets 
+
+gets: pshs  d,u 
+ ldu   6,s 
+ bra   L000a 
+L0006 ldd   ,s 
+ stb   ,u+ 
+L000a leax  _iob,y 
+ pshs  x 
+ lbsr  getc 
+ leas  2,s 
+ std   ,s 
+ cmpd  #$000d 
+ beq   L0025 
+ ldd   ,s 
+ cmpd  #-1 
+ bne   L0006 
+L0025 ldd   ,s 
+ cmpd  #-1 
+ bne   L0031 
+ clra   
+ clrb   
+ bra   L0037 
+L0031 clra   
+ clrb   
+ stb   ,u 
+ ldd   6,s 
+L0037 leas  2,s 
+ puls  u,pc 
+fgets: pshs  u 
+ ldu   6,s 
+ leas  -4,s 
+ ldd   8,s 
+ std   ,s 
+ bra   L0055 
+L0047 ldd   2,s 
+ ldx   ,s 
+ leax  1,x 
+ stx   ,s 
+ stb   -1,x 
+ cmpb  #$0d 
+ beq   L006e 
+L0055 tfr   u,d 
+ leau  -1,u 
+ std   -2,s 
+ ble   L006e 
+ ldd   12,s 
+ pshs  d 
+ lbsr  getc 
+ leas  2,s 
+ std   2,s 
+ cmpd  #-1 
+ bne   L0047 
+L006e clra   
+ clrb   
+ stb   [,s] 
+ ldd   2,s 
+ cmpd  #-1 
+ bne   L007e 
+ clra   
+ clrb   
+ bra   L0080 
+L007e ldd   8,s 
+L0080 leas  4,s 
+ puls  u,pc 
+
+ ends  
+

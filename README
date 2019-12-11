@@ -1,0 +1,8 @@
+The file 'cc.patch' contains diffs to the clib sources and various
+Makefiles.  No modifications have been made to the preprocessor,
+compiler and optimizer.
+
+The 'dd' subdirectory needs to be copied or symlinked under the root
+directory, since that's where the preprocessor expects to find
+headers.  This is a definite 'FIXME'.  When building for Linux, this
+should come either from the command line or an environment variable.

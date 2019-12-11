@@ -1,0 +1,256 @@
+* Disassembly by Os9disasm of putc.r
+
+ psect putc_c,$0,$0,4,0,putc 
+
+putc: pshs  u 
+ ldu   6,s 
+ ldd   6,u 
+ anda  #$80 
+ andb  #$22 
+ cmpd  #$8002 
+ beq   L0024 
+ ldd   6,u 
+ clra   
+ andb  #$22 
+ cmpd  #2 
+ lbne  L013c 
+ pshs  u 
+ lbsr  _setbase 
+ leas  2,s 
+L0024 ldd   6,u 
+ clra   
+ andb  #4 
+ beq   L0060 
+ ldd   #1 
+ pshs  d 
+ leax  7,s 
+ pshs  x 
+ ldd   8,u 
+ pshs  d 
+ ldd   6,u 
+ clra   
+ andb  #$40 
+ beq   L0045 
+ leax  writeln,pcr 
+ bra   L0049 
+L0045 leax  write,pcr 
+L0049 tfr   x,d 
+ tfr   d,x 
+ jsr   ,x 
+ leas  6,s 
+ cmpd  #-1 
+ bne   L00a1 
+ ldd   6,u 
+ orb   #$20 
+ std   6,u 
+ lbra  L013c 
+L0060 ldd   6,u 
+ anda  #1 
+ clrb   
+ std   -2,s 
+ bne   L0070 
+ pshs  u 
+ lbsr  L0159 
+ leas  2,s 
+L0070 ldd   ,u 
+ addd  #1 
+ std   ,u 
+ subd  #1 
+ tfr   d,x 
+ ldd   4,s 
+ stb   ,x 
+ ldd   ,u 
+ cmpd  4,u 
+ bcc   L0096 
+ ldd   6,u 
+ clra   
+ andb  #$40 
+ beq   L00a1 
+ ldd   4,s 
+ cmpd  #$000d 
+ bne   L00a1 
+L0096 pshs  u 
+ lbsr  L0159 
+ std   ,s++ 
+ lbne  L013c 
+L00a1 ldd   4,s 
+ puls  u,pc 
+putw: pshs  u 
+ ldu   4,s 
+ ldd   6,s 
+ pshs  d 
+ pshs  u 
+ ldd   #8 
+ lbsr  cclsr 
+ pshs  d 
+ lbsr  putc 
+ leas  4,s 
+ ldd   6,s 
+ pshs  d 
+ pshs  u 
+ lbsr  putc 
+ lbra  L0213 
+_tidyup: pshs  d,u 
+ leau  _iob,y 
+ clra   
+ clrb   
+ std   ,s 
+ bra   L00de 
+L00d4 tfr   u,d 
+ leau  13,u 
+ pshs  d 
+ bsr   fclose 
+ leas  2,s 
+L00de ldd   ,s 
+ addd  #1 
+ std   ,s 
+ subd  #1 
+ cmpd  #$0010 
+ blt   L00d4 
+ lbra  L0155 
+fclose: pshs  u 
+ ldu   4,s 
+ leas  -2,s 
+ cmpu  #0 
+ beq   L0101 
+ ldd   6,u 
+ bne   L0107 
+L0101 ldd   #-1 
+ lbra  L0155 
+L0107 ldd   6,u 
+ clra   
+ andb  #2 
+ beq   L0116 
+ pshs  u 
+ bsr   fflush 
+ leas  2,s 
+ bra   L0118 
+L0116 clra   
+ clrb   
+L0118 std   ,s 
+ ldd   8,u 
+ pshs  d 
+ lbsr  close 
+ leas  2,s 
+ clra   
+ clrb   
+ std   6,u 
+ ldd   ,s 
+ bra   L0155 
+fflush: pshs  u 
+ ldu   4,s 
+ beq   L013c 
+ ldd   6,u 
+ clra   
+ andb  #$22 
+ cmpd  #2 
+ beq   L0141 
+L013c ldd   #-1 
+ puls  u,pc 
+L0141 ldd   6,u 
+ anda  #$80 
+ clrb   
+ std   -2,s 
+ bne   L0151 
+ pshs  u 
+ lbsr  _setbase 
+ leas  2,s 
+L0151 pshs  u 
+ bsr   L0159 
+L0155 leas  2,s 
+ puls  u,pc 
+L0159 pshs  u 
+ ldu   4,s 
+ leas  -4,s 
+ ldd   6,u 
+ anda  #1 
+ clrb   
+ std   -2,s 
+ bne   L018b 
+ ldd   ,u 
+ cmpd  4,u 
+ beq   L018b 
+ clra   
+ clrb   
+ pshs  d 
+ pshs  u 
+ lbsr  ftell 
+ leas  2,s 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ ldd   8,u 
+ pshs  d 
+ lbsr  lseek 
+ leas  8,s 
+L018b ldd   ,u 
+ subd  2,u 
+ std   2,s 
+ lbeq  L0203 
+ ldd   6,u 
+ anda  #1 
+ clrb   
+ std   -2,s 
+ lbeq  L0203 
+ ldd   6,u 
+ clra   
+ andb  #$40 
+ beq   L01da 
+ ldd   2,u 
+ bra   L01d2 
+L01ab ldd   2,s 
+ pshs  d 
+ ldd   ,u 
+ pshs  d 
+ ldd   8,u 
+ pshs  d 
+ lbsr  writeln 
+ leas  6,s 
+ std   ,s 
+ cmpd  #-1 
+ bne   L01c8 
+ leax  4,s 
+ bra   L01f2 
+L01c8 ldd   2,s 
+ subd  ,s 
+ std   2,s 
+ ldd   ,u 
+ addd  ,s 
+L01d2 std   ,u 
+ ldd   2,s 
+ bne   L01ab 
+ bra   L0203 
+L01da ldd   2,s 
+ pshs  d 
+ ldd   2,u 
+ pshs  d 
+ ldd   8,u 
+ pshs  d 
+ lbsr  write 
+ leas  6,s 
+ cmpd  2,s 
+ beq   L0203 
+ bra   L01f4 
+L01f2 leas  -4,x 
+L01f4 ldd   6,u 
+ orb   #$20 
+ std   6,u 
+ ldd   4,u 
+ std   ,u 
+ ldd   #-1 
+ bra   L0213 
+L0203 ldd   6,u 
+ ora   #1 
+ std   6,u 
+ ldd   2,u 
+ std   ,u 
+ addd  11,u 
+ std   4,u 
+ clra   
+ clrb   
+L0213 leas  4,s 
+ puls  u,pc 
+
+ ends  
+

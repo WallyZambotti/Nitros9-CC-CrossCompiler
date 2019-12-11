@@ -1,0 +1,30 @@
+#! /bin/bash
+
+# ######################################################################### #
+# generates rma listing from optimized sources sans line #'s and addresses. #
+# the purpose for this is so that we can diff two files.  Without addresses #
+# and line numbers it's easier to check for branch distances, etc           #
+# ######################################################################### #
+
+function dolist
+{
+#    if ! grep defines\.lbl $1 >/dev/null
+#    then
+#        tmpfile=`echo $1|sed 's/\./_/'`
+#        mv $1 $tmpfile
+#        echo -e ' ifp1\n use ../../disassembly/defines.lbl\n endc' >$1
+#        cat $tmpfile >> $1
+#        rm $tmpfile
+#    fi
+
+    rma -l $1 | grep '^[[:digit:]]' | egrep -v '( ttl | nam )' | sed 's/^..........//' > ${1%?}rma
+}
+
+curf=0
+
+while [ $# -gt 0 ]
+do
+    dolist $1
+    shift
+done
+

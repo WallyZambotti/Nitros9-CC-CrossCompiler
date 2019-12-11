@@ -1,0 +1,36 @@
+* Disassembly by Os9disasm of mktemp.r
+
+ psect mktemp_c,$0,$0,1,0,mktemp 
+
+* class D external label equates
+
+D0000 equ $0000 
+
+mktemp: pshs  d,u 
+ ldu   6,s 
+ bra   L0008 
+L0006 leau  1,u 
+L0008 ldb   ,u 
+ sex    
+ std   ,s 
+ beq   L0017 
+ ldd   ,s 
+ cmpd  #$0058 
+ bne   L0006 
+L0017 ldd   ,s 
+ beq   L002d 
+ lbsr  getpid 
+ pshs  d 
+ leax  >L0033,pcr 
+ pshs  x 
+ pshs  u 
+ lbsr  sprintf 
+ leas  6,s 
+L002d ldd   6,s 
+ leas  2,s 
+ puls  u,pc 
+L0033 bcs   L0099 
+ fcb $00 
+
+ ends  
+

@@ -1,0 +1,17 @@
+ psect r2_a,0,0,0,0,0
+
+ vsect dp
+id2: fcc "initdp file 2"
+ fcb 0
+ud2: rmb 2
+ endsect
+
+ vsect
+indp2: fcc "initnondp file 2"
+ fcb 0
+undp2: rmb 1
+ endsect
+
+tt: rts
+ endsect
+

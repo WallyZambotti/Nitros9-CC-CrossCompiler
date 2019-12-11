@@ -1,0 +1,223 @@
+* Disassembly by Os9disasm of fseek.r
+
+ psect fseek_c,$0,$0,3,0,fseek 
+
+* class D external label equates
+
+D0000 equ $0000 
+
+* class X external label equates
+
+X3510 equ $3510 
+Xffff equ $ffff 
+
+fseek: pshs  u 
+ ldu   4,s 
+ leas  -6,s 
+ cmpu  #0 
+ beq   L0013 
+ ldd   6,u 
+ clra   
+ andb  #3 
+ bne   L0019 
+L0013 ldd   #-1 
+ lbra  L013c 
+L0019 ldd   6,u 
+ anda  #$80 
+ clrb   
+ std   -2,s 
+ bne   L002c 
+ pshs  u 
+ lbsr  _setbase 
+ leas  2,s 
+ lbra  L0102 
+L002c ldd   6,u 
+ anda  #1 
+ clrb   
+ std   -2,s 
+ beq   L004b 
+ pshs  u 
+ lbsr  fflush 
+ leas  2,s 
+ ldd   6,u 
+ anda  #254 
+ std   6,u 
+ ldd   2,u 
+ addd  11,u 
+ std   4,u 
+ lbra  L0100 
+L004b ldd   ,u 
+ cmpd  4,u 
+ lbhs  L0102 
+ leax  2,s 
+ pshs  x 
+ leax  14,s 
+ lbsr  _lmove 
+ ldx   16,s 
+ lbra  L00cf 
+L0063 leax  2,s 
+ pshs  x 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ pshs  u 
+ lbsr  ftell 
+ leas  2,s 
+ lbsr  _lsub 
+ lbsr  _lmove 
+L007c ldd   11,u 
+ lbsr  _litol 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ leax  6,s 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ bsr   L0099 
+ neg   D0000 
+ neg   D0000 
+L0099 puls  x 
+ lbsr  _lcmpr 
+ bge   L00a7 
+ leax  6,s 
+ lbsr  _lneg 
+ bra   L00a9 
+L00a7 leax  6,s 
+L00a9 lbsr  _lcmpr 
+ blt   L00dc 
+ ldd   4,s 
+ addd  ,u 
+ std   ,s 
+ cmpd  2,u 
+ bcs   L00dc 
+ ldd   ,s 
+ cmpd  4,u 
+ bcc   L00dc 
+ ldd   ,s 
+ std   ,u 
+ ldd   6,u 
+ andb  #$ef 
+ std   6,u 
+ lbra  L013a 
+ bra   L00dc 
+L00cf stx   -2,s 
+ lbeq  L0063 
+ cmpx  #1 
+ lbeq  L007c 
+L00dc ldd   16,s 
+ cmpd  #1 
+ bne   L00fe 
+ leax  12,s 
+ pshs  x 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ ldd   4,u 
+ subd  ,u 
+ lbsr  _litol 
+ lbsr  _lsub 
+ lbsr  _lmove 
+L00fe ldd   4,u 
+L0100 std   ,u 
+L0102 ldd   6,u 
+ andb  #$ef 
+ std   6,u 
+ ldd   16,s 
+ pshs  d 
+ leax  14,s 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ ldd   8,u 
+ pshs  d 
+ lbsr  lseek 
+ leas  8,s 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ bsr   L012e 
+ stu   Xffff 
+ stu   X3510 
+L012e equ *-2
+ lbsr  _lcmpr 
+ bne   L013a 
+ ldd   #-1 
+ bra   L013c 
+L013a clra   
+ clrb   
+L013c leas  6,s 
+ puls  u,pc 
+rewind: pshs  u 
+ clra   
+ clrb   
+ pshs  d 
+ clra   
+ clrb   
+ pshs  d 
+ pshs  d 
+ ldd   10,s 
+ pshs  d 
+ lbsr  fseek 
+ leas  8,s 
+ puls  u,pc 
+ftell: pshs  u 
+ ldu   4,s 
+ beq   L0164 
+ ldd   6,u 
+ clra   
+ andb  #3 
+ bne   L0177 
+L0164 bsr   L016a 
+ stu   Xffff 
+ stu   X3510 
+L016a equ *-2
+ leau  _flacc,y 
+ pshs  u 
+ lbsr  _lmove 
+ puls  u,pc 
+L0177 ldd   6,u 
+ anda  #$80 
+ clrb   
+ std   -2,s 
+ bne   L0187 
+ pshs  u 
+ lbsr  _setbase 
+ leas  2,s 
+L0187 ldd   #1 
+ pshs  d 
+ clra   
+ clrb   
+ pshs  d 
+ pshs  d 
+ ldd   8,u 
+ pshs  d 
+ lbsr  lseek 
+ leas  8,s 
+ ldd   2,x 
+ pshs  d 
+ ldd   ,x 
+ pshs  d 
+ ldd   6,u 
+ anda  #1 
+ clrb   
+ std   -2,s 
+ beq   L01b0 
+ ldd   2,u 
+ bra   L01b2 
+L01b0 ldd   4,u 
+L01b2 pshs  d 
+ ldd   ,u 
+ subd  ,s++ 
+ lbsr  _litol 
+ lbsr  _ladd 
+ puls  u,pc 
+
+ ends  
+

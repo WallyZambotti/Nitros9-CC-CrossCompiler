@@ -1,0 +1,56 @@
+* Disassembly by Os9disasm of stat.r
+
+ psect stat_a,$0,$0,1,0,getstat 
+
+* OS-9 system function equates
+
+I$GetStt equ $8d 
+I$SetStt equ $8e 
+
+getstat: lda   5,s 
+ ldb   3,s 
+ beq   L0033 
+ cmpb  #1 
+ beq   L0035 
+ cmpb  #6 
+ beq   L0035 
+ cmpb  #2 
+ beq   L001b 
+ cmpb  #5 
+ beq   L001b 
+ ldb   #$d0 
+ lbra  _os9err 
+L001b pshs  u 
+ os9 I$GetStt 
+ bcc   L0027 
+ puls  u 
+ lbra  _os9err 
+L0027 stx   [8,s] 
+ ldx   8,s 
+ stu   2,x 
+ puls  u 
+ clra   
+ clrb   
+ rts    
+L0033 ldx   6,s 
+L0035 os9 I$GetStt 
+ lbra  _sysret 
+setstat: lda   5,s 
+ ldb   3,s 
+ beq   L004a 
+ cmpb  #2 
+ beq   L0052 
+ ldb   #$d0 
+ lbra  _os9err 
+L004a ldx   6,s 
+ os9 I$SetStt 
+ lbra  _sysret 
+L0052 pshs  u 
+ ldx   8,s 
+ ldu   10,s 
+ os9 I$SetStt 
+ puls  u 
+ lbra  _sysret 
+
+ ends  
+

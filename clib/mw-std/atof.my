@@ -1,0 +1,265 @@
+                     psect atof_c,0,0,0,0,0  
+                     nam   atof_c      
+                     ttl   atof        
+ 3440       atof:    pshs  u           
+ ee64                ldu   4,s         
+ 32e8ed              leas  -19,s       
+ 2002                bra   _2          
+ 3341       _3       leau  1,u         
+ e6c4       _2       ldb   0,u         
+ c120                cmpb  #32         
+ 27f8                beq   _3          
+ e6c4       _4       ldb   0,u         
+ c109                cmpb  #9          
+ 1027fff0            lbeq  _3          
+ e6c4       _1       ldb   0,u         
+ c12d                cmpb  #45         
+ 2605                bne   _6          
+ cc0001     _5       ldd   #1          
+ 2002                bra   _$1         
+ 4f         _6       clra              
+ 5f                  clrb              
+ ed67       _$1      std   7,s         
+ e6c4       _7       ldb   0,u         
+ c12d                cmpb  #45         
+ 2706                beq   _8          
+ e6c4       _10      ldb   0,u         
+ c12b                cmpb  #43         
+ 2602                bne   _9          
+ 3341       _8       leau  1,u         
+ 306b       _9       leax  11,s        
+ 3410                pshs  x           
+ 8d08                bsr   _11         
+ 0000                fdb   0,0,0,0   
+ 3510       _11      puls  x           
+=17ffb7              lbsr  _dmove      
+ 2010                bra   _13         
+ e662       _14      ldb   2,s         
+ 1d                  sex               
+ 3406                pshs  d           
+ 306d                leax  13,s        
+ 3410                pshs  x           
+ 170127              lbsr  L0178       
+ 3264                leas  4,s         
+ 3341                leau  1,u         
+ e6c4       _13      ldb   0,u         
+ e762                stb   2,s         
+ 1d                  sex               
+=30a90000            leax  _chcodes,y  
+ 308b                leax  d,x         
+ e684                ldb   0,x         
+ 4f                  clra              
+ c408                andb  #8          
+ 26de                bne   _14         
+ 4f         _12      clra              
+ 5f                  clrb              
+ ed63                std   3,s         
+ e6c4                ldb   0,u         
+ c12e                cmpb  #46         
+ 262d                bne   _16         
+ 3341       _15      leau  1,u         
+ 2017                bra   _18         
+ e662       _19      ldb   2,s         
+ 1d                  sex               
+ 3406                pshs  d           
+ 306d                leax  13,s        
+ 3410                pshs  x           
+ 1700f7              lbsr  L0178       
+ 3264                leas  4,s         
+ 3341                leau  1,u         
+ ec63                ldd   3,s         
+ c30001              addd  #1          
+ ed63                std   3,s         
+ e6c4       _18      ldb   0,u         
+ e762                stb   2,s         
+ 1d                  sex               
+=30a90000            leax  _chcodes,y  
+ 308b                leax  d,x         
+ e684                ldb   0,x         
+ 4f                  clra              
+ c408                andb  #8          
+ 26d7                bne   _19         
+            _16                        
+ 306b       _17      leax  11,s        
+ afe4                stx   0,s         
+ cc00b8              ldd   #184        
+ aee4                ldx   0,s         
+ e707                stb   7,x         
+ 306b                leax  11,s        
+ 3410                pshs  x           
+ 306d                leax  13,s        
+ 3410                pshs  x           
+=17ff46              lbsr  _dnorm      
+ 3262                leas  2,s         
+=17ff41              lbsr  _dmove      
+ e6c4                ldb   0,u         
+ e762                stb   2,s         
+ c165                cmpb  #101        
+ 2708                beq   _20         
+ e662       _22      ldb   2,s         
+ c145                cmpb  #69         
+ 1026005f            lbne  _21         
+ cc0001     _20      ldd   #1          
+ ed65                std   5,s         
+ 3341                leau  1,u         
+ e6c4                ldb   0,u         
+ c12b                cmpb  #43         
+ 2604                bne   _24         
+ 3341       _23      leau  1,u         
+ 200c                bra   _25         
+ e6c4       _24      ldb   0,u         
+ c12d                cmpb  #45         
+ 2606                bne   _27         
+ 3341       _26      leau  1,u         
+ 4f                  clra              
+ 5f                  clrb              
+ ed65                std   5,s         
+            _25                        
+ 4f         _27      clra              
+ 5f                  clrb              
+ 2014                bra   _$2         
+ ec69       _30      ldd   9,s         
+ 3406                pshs  d           
+ cc000a              ldd   #10         
+=17ff06              lbsr  ccmult      
+ 3406                pshs  d           
+ e664                ldb   4,s         
+ 1d                  sex               
+ e3e1                addd  ,s++        
+ c3ffd0              addd  #-48        
+ ed69       _$2      std   9,s         
+ e6c0       _29      ldb   ,u+         
+ e762                stb   2,s         
+ 1d                  sex               
+=30a90000            leax  _chcodes,y  
+ 308b                leax  d,x         
+ e684                ldb   0,x         
+ 4f                  clra              
+ c408                andb  #8          
+ 26d8                bne   _30         
+ ec63       _28      ldd   3,s         
+ 3406                pshs  d           
+ ec67                ldd   7,s         
+ 2708                beq   _31         
+ ec6b       _32      ldd   11,s        
+ 40                  nega              
+ 50                  negb              
+ 8200                sbca  #0          
+ 2002                bra   _33         
+ ec6b       _31      ldd   11,s        
+ e3e1       _33      addd  ,s++        
+ ed63                std   3,s         
+ ec63       _21      ldd   3,s         
+ 2c0d                bge   _35         
+ ec63       _34      ldd   3,s         
+ 40                  nega              
+ 50                  negb              
+ 8200                sbca  #0          
+ ed63                std   3,s         
+ cc0001              ldd   #1          
+ 2002                bra   _$3         
+ 4f         _35      clra              
+ 5f                  clrb              
+ ed65       _$3      std   5,s         
+ 306b                leax  11,s        
+ 3410                pshs  x           
+ ec67                ldd   7,s         
+ 3406                pshs  d           
+ ec67                ldd   7,s         
+ 3406                pshs  d           
+ 30e811              leax  17,s        
+=17feab              lbsr  _dstack     
+=17fea8              lbsr  scale       
+ 326c                leas  12,s        
+=17fea3              lbsr  _dmove      
+ ec67       _36      ldd   7,s         
+ 270d                beq   _38         
+=30a90000   _37      leax  _flacc,y    
+ 3410                pshs  x           
+ 306d                leax  13,s        
+=17fe94              lbsr  _dneg       
+ 2008                bra   _$4         
+=30a90000   _38      leax  _flacc,y    
+ 3410                pshs  x           
+ 306d                leax  13,s        
+=17fe87     _$4      lbsr  _dmove      
+ 32e813     _39      leas  19,s        
+ 35c0                puls  u,pc        
+ ae62       L0178    ldx   2,s         
+ 3278                leas  -8,s        
+ ec05                ldd   5,x         
+ 58                  lslb              
+ 49                  rola              
+ ed05                std   5,x         
+ ed65                std   5,s         
+ ec03                ldd   3,x         
+ 59                  rolb              
+ 49                  rola              
+ ed03                std   3,x         
+ ed63                std   3,s         
+ ec01                ldd   1,x         
+ 59                  rolb              
+ 49                  rola              
+ ed01                std   1,x         
+ ed61                std   1,s         
+ a684                lda   ,x          
+ 49                  rola              
+ a784                sta   ,x          
+ a7e4                sta   ,s          
+ 6806                asl   6,x         
+ 6905                rol   5,x         
+ 6904                rol   4,x         
+ 6903                rol   3,x         
+ 6902                rol   2,x         
+ 6901                rol   1,x         
+ 6984                rol   ,x          
+ 10250058            lblo  L0205       
+ 6806                asl   6,x         
+ 6905                rol   5,x         
+ 6904                rol   4,x         
+ 6903                rol   3,x         
+ 6902                rol   2,x         
+ 6901                rol   1,x         
+ 6984                rol   ,x          
+ 10250046            lblo  L0205       
+ ec05                ldd   5,x         
+ e365                addd  5,s         
+ ed05                std   5,x         
+ ec03                ldd   3,x         
+ e964                adcb  4,s         
+ a963                adca  3,s         
+ ed03                std   3,x         
+ ec01                ldd   1,x         
+ e962                adcb  2,s         
+ a961                adca  1,s         
+ ed01                std   1,x         
+ e684                ldb   ,x          
+ e9e4                adcb  ,s          
+ e784                stb   ,x          
+ 2528                bcs   L0205       
+ e66d                ldb   13,s        
+ c40f                andb  #$0f        
+ 4f                  clra              
+ e305                addd  5,x         
+ ed05                std   5,x         
+ cc0000              ldd   #0          
+ e904                adcb  4,x         
+ a903                adca  3,x         
+ ed03                std   3,x         
+ cc0000              ldd   #0          
+ e902                adcb  2,x         
+ a901                adca  1,x         
+ ed01                std   1,x         
+ 8600                lda   #0          
+ a984                adca  ,x          
+ a784                sta   ,x          
+ 2505                bcs   L0205       
+ 3268                leas  8,s         
+ 4f                  clra              
+ 5f                  clrb              
+ 39                  rts               
+ cc0001     L0205    ldd   #1          
+ 3268                leas  8,s         
+ 39                  rts               
+                     ends              
+                     endsect             

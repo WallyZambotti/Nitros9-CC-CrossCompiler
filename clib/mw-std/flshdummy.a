@@ -1,0 +1,9 @@
+* Disassembly by Os9disasm of flshdummy.r
+
+ psect flshdummy_c,$0,$0,1,0,fflush 
+
+fflush: pshs  u 
+ puls  u,pc 
+
+ ends  
+

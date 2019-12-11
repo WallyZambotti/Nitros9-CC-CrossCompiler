@@ -1,0 +1,10 @@
+.vscode/*
+ccsources/ansifront/ansifront
+ccsources/ansifront/*.o
+ccsources/c.comp/co_comp
+ccsources/c.comp/*.o
+ccsources/c.opt/co_opt
+ccsources/c.opt/*.o
+ccsources/cprep19/coprep
+ccsources/cprep19/*.o
+test/dd/cmds/*

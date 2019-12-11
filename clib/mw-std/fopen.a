@@ -1,0 +1,205 @@
+* Disassembly by Os9disasm of fopen.r
+
+ psect fopen_c,$0,$0,4,0,L0000 
+
+L0000 pshs  u 
+ leau  _iob,y 
+L0006 ldd   6,u 
+ clra   
+ andb  #3 
+ lbeq  L0077 
+ leau  13,u 
+ pshs  u 
+ leax  _iob+208,y 
+ cmpx  ,s++ 
+ bhi   L0006 
+ ldd   #$00c8 
+ std   errno,y 
+ lbra  L007b 
+ puls  u,pc 
+L0027 pshs  u 
+ ldu   8,s 
+ bne   L0031 
+ bsr   L0000 
+ tfr   d,u 
+L0031 stu   -2,s 
+ beq   L007b 
+ ldd   4,s 
+ std   8,u 
+ ldx   6,s 
+ ldb   1,x 
+ cmpb  #$2b 
+ beq   L0049 
+ ldx   6,s 
+ ldb   2,x 
+ cmpb  #$2b 
+ bne   L004f 
+L0049 ldd   6,u 
+ orb   #3 
+ bra   L006d 
+L004f ldd   6,u 
+ pshs  d 
+ ldb   [8,s] 
+ cmpb  #$72 
+ beq   L0061 
+ ldb   [8,s] 
+ cmpb  #$64 
+ bne   L0066 
+L0061 ldd   #1 
+ bra   L0069 
+L0066 ldd   #2 
+L0069 ora   ,s+ 
+ orb   ,s+ 
+L006d std   6,u 
+ ldd   2,u 
+ addd  11,u 
+ std   4,u 
+ std   ,u 
+L0077 tfr   u,d 
+ puls  u,pc 
+L007b clra   
+ clrb   
+ puls  u,pc 
+L007f pshs  u 
+ ldu   4,s 
+ leas  -4,s 
+ clra   
+ clrb   
+ std   ,s 
+ ldx   10,s 
+ ldb   1,x 
+ sex    
+ tfr   d,x 
+ bra   L00b0 
+L0092 ldx   10,s 
+ ldb   2,x 
+ cmpb  #$2b 
+ bne   L009f 
+ ldd   #7 
+ bra   L00a7 
+L009f ldd   #4 
+ bra   L00a7 
+L00a4 ldd   #3 
+L00a7 std   ,s 
+ bra   L00c0 
+L00ab leax  4,s 
+ lbra  L0118 
+L00b0 stx   -2,s 
+ beq   L00c0 
+ cmpx  #$0078 
+ beq   L0092 
+ cmpx  #$002b 
+ beq   L00a4 
+ bra   L00ab 
+L00c0 ldb   [10,s] 
+ sex    
+ tfr   d,x 
+ lbra  L0125 
+L00c9 ldd   ,s 
+ orb   #1 
+ bra   L010b 
+L00cf ldd   ,s 
+ orb   #2 
+ pshs  d 
+ pshs  u 
+ lbsr  open 
+ leas  4,s 
+ std   2,s 
+ cmpd  #-1 
+ beq   L00fa 
+ ldd   #2 
+ pshs  d 
+ clra   
+ clrb   
+ pshs  d 
+ pshs  d 
+ ldd   8,s 
+ pshs  d 
+ lbsr  lseek 
+ leas  8,s 
+ bra   L013f 
+L00fa ldd   ,s 
+ orb   #2 
+ pshs  d 
+ pshs  u 
+ lbsr  creat 
+ bra   L0112 
+L0107 ldd   ,s 
+ orb   #$81 
+L010b pshs  d 
+ pshs  u 
+ lbsr  open 
+L0112 leas  4,s 
+ std   2,s 
+ bra   L013f 
+L0118 leas  -4,x 
+L011a ldd   #$00cb 
+ std   errno,y 
+ clra   
+ clrb   
+ bra   L0141 
+L0125 cmpx  #$0072 
+ lbeq  L00c9 
+ cmpx  #$0061 
+ lbeq  L00cf 
+ cmpx  #$0077 
+ beq   L00fa 
+ cmpx  #$0064 
+ beq   L0107 
+ bra   L011a 
+L013f ldd   2,s 
+L0141 leas  4,s 
+ puls  u,pc 
+fdopen: pshs  u 
+ clra   
+ clrb   
+ pshs  d 
+ ldd   8,s 
+ pshs  d 
+ ldd   8,s 
+ pshs  d 
+ lbra  L01a1 
+fopen: pshs  u 
+ ldd   6,s 
+ pshs  d 
+ ldd   6,s 
+ pshs  d 
+ lbsr  L007f 
+ leas  4,s 
+ tfr   d,u 
+ cmpu  #-1 
+ bne   L0171 
+ clra   
+ clrb   
+ bra   L01a6 
+L0171 clra   
+ clrb   
+ bra   L0199 
+freopen: pshs  u 
+ ldd   8,s 
+ pshs  d 
+ lbsr  fclose 
+ leas  2,s 
+ ldd   6,s 
+ pshs  d 
+ ldd   6,s 
+ pshs  d 
+ lbsr  L007f 
+ leas  4,s 
+ tfr   d,u 
+ stu   -2,s 
+ bge   L0197 
+ clra   
+ clrb   
+ bra   L01a6 
+L0197 ldd   8,s 
+L0199 pshs  d 
+ ldd   8,s 
+ pshs  d 
+ pshs  u 
+L01a1 lbsr  L0027 
+ leas  6,s 
+L01a6 puls  u,pc 
+
+ ends  
+

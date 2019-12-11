@@ -1,0 +1,33 @@
+--- cstart.a.orig	2003-01-16 14:54:21.000000000 -0500
++++ cstart.a	2008-12-29 00:01:55.000000000 -0500
+@@ -1,5 +1,5 @@
+  ifp1
+- use ..../defs/os9defs.a
++ use os9defs.a
+  endc
+ 
+ pushzero macro
+@@ -10,7 +10,7 @@
+ Typ equ 1
+ Edit equ 1
+ Stk equ nfiles*256+128+256 stdin,stdout,stderr and fudge
+- psect cstart_a,$11,$81,Edit,Stk,_cstart
++ psect cstart_a,Typ,0,Edit,Stk,_cstart
+ 
+ cr equ $0d
+ sp equ $20
+@@ -212,12 +212,12 @@
+  fcb 13
+ 
+ fsterr leax <fixserr,pcr address of error string
+- ldb #E$MEMFUL MEMORY FULL error number
++ ldb #E$MemFul MEMORY FULL error number
+ 
+ erexit pshs b stack the error number
+  lda #2 standard error output
+  ldy #100 more than necessary
+- os9 I$WRITLN write it
++ os9 I$WritLn write it
+  pushzero clear MSB of status
+  lbsr _exit and out
+ * no return here

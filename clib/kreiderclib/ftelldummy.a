@@ -1,0 +1,13 @@
+* Disassembly by Os9disasm of ftelldummy.r
+
+ psect ftelldummy_a,$0,$0,1,0,ftell 
+
+ftell: leax  _flacc,y 
+ clra   
+ clrb   
+ std   ,x 
+ std   2,x 
+ rts    
+
+ ends  
+

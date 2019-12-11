@@ -1,0 +1,44 @@
+* Disassembly by Os9disasm of fwrite.r
+
+ psect fwrite_c,$0,$0,1,0,fwrite 
+
+fwrite: pshs  u 
+ ldu   4,s 
+ leas  -4,s 
+ clra   
+ clrb   
+ bra   L003b 
+L000a clra   
+ clrb   
+ std   ,s 
+ bra   L0027 
+L0010 ldd   14,s 
+ pshs  d 
+ ldb   ,u+ 
+ sex    
+ pshs  d 
+ lbsr  putc 
+ leas  4,s 
+ ldx   14,s 
+ ldd   6,x 
+ clra   
+ andb  #$20 
+ bne   L0044 
+L0027 ldd   ,s 
+ addd  #1 
+ std   ,s 
+ subd  #1 
+ cmpd  10,s 
+ blt   L0010 
+ ldd   2,s 
+ addd  #1 
+L003b std   2,s 
+ ldd   2,s 
+ cmpd  12,s 
+ blt   L000a 
+L0044 ldd   2,s 
+ leas  4,s 
+ puls  u,pc 
+
+ ends  
+

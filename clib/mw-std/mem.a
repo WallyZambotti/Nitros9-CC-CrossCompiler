@@ -1,0 +1,71 @@
+* Disassembly by Os9disasm of mem.r
+
+ psect mem_a,$0,$0,3,0,sbrk 
+
+* OS-9 system function equates
+
+F$Mem equ $07 
+
+ vsect  
+
+* Uninitialized data (class B)
+B0000 rmb 2 
+* Initialized Data (class G)
+
+ ends  
+
+
+sbrk: ldd   memend,y 
+ pshs  d 
+ ldd   4,s 
+ cmpd  B0000,y 
+ bcs   L0034 
+ addd  memend,y 
+ pshs  y 
+ subd  ,s 
+ os9 F$Mem 
+ tfr   y,d 
+ puls  y 
+ bcc   L0026 
+ ldd   #-1 
+ leas  2,s 
+ rts    
+L0026 std   memend,y 
+ addd  B0000,y 
+ subd  ,s 
+ std   B0000,y 
+L0034 leas  2,s 
+ ldd   B0000,y 
+ pshs  d 
+ subd  4,s 
+ std   B0000,y 
+ ldd   memend,y 
+ subd  ,s++ 
+ pshs  d 
+ clra   
+ ldx   ,s 
+L004d sta   ,x+ 
+ cmpx  memend,y 
+ bcs   L004d 
+ puls  d,pc 
+ibrk: ldd   2,s 
+ addd  _mtop,y 
+ bcs   L0080 
+ cmpd  _stbot,y 
+ bcc   L0080 
+ pshs  d 
+ ldx   _mtop,y 
+ clra   
+L006d cmpx  ,s 
+ bcc   L0075 
+ sta   ,x+ 
+ bra   L006d 
+L0075 ldd   _mtop,y 
+ puls  x 
+ stx   _mtop,y 
+ rts    
+L0080 ldd   #-1 
+ rts    
+
+ ends  
+

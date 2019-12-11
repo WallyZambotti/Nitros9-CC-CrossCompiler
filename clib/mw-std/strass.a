@@ -1,0 +1,21 @@
+* Disassembly by Os9disasm of strass.r
+
+ psect strass_c,$0,$0,1,0,_strass 
+
+_strass: pshs  u 
+ ldu   4,s 
+ bra   L0010 
+L0006 ldx   6,s 
+ leax  1,x 
+ stx   6,s 
+ ldb   -1,x 
+ stb   ,u+ 
+L0010 ldd   8,s 
+ addd  #-1 
+ std   8,s 
+ subd  #-1 
+ bgt   L0006 
+ puls  u,pc 
+
+ ends  
+

@@ -1,0 +1,16 @@
+* Disassembly by Os9disasm of pffdummy.r
+
+ psect pffdummy_c,$0,$0,1,0,pffloat 
+
+* class D external label equates
+
+D0000 equ $0000 
+
+pffloat: pshs  u 
+ leax  >L000a,pcr 
+ tfr   x,d 
+ puls  u,pc 
+L000a fcb $00 
+
+ ends  
+

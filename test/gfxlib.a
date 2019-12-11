@@ -1,0 +1,177 @@
+ psect gfxlib_c,0,0,0,0,0
+ nam gfxlib_c
+ ttl _f2bf4a6
+_f2bf4a6:
+ pshs u
+ leas -10,s
+ ldd 14,s
+ stb 1,s
+ ldd #139
+ stb 2,s
+ ldd 16,s
+ std 4,s
+ leax 0,s
+ pshs x
+ ldd #142
+ pshs d
+ lbsr _os9
+ leas 4,s
+ cmpd #-1
+ lbne _2
+_1
+ ldb 2,s
+ sex
+ clra
+ leas 10,s
+ puls u,pc
+
+_2
+ ldd 6,s
+ std [18,s]
+ ldd 4,s
+ std [20,s]
+ clra
+ clrb
+ leas 10,s
+ puls u,pc
+
+ ttl _753221b
+_753221b:
+ pshs u
+ leas -10,s
+ ldd 14,s
+ stb 1,s
+ ldd #140
+ stb 2,s
+ ldd 16,s
+ std 6,s
+ leax 0,s
+ pshs x
+ ldd #142
+ pshs d
+ lbsr _os9
+ leas 4,s
+ cmpd #-1
+ lbne _4
+_3
+ ldb 2,s
+ sex
+ clra
+ leas 10,s
+ puls u,pc
+
+_4
+ clra
+ clrb
+ leas 10,s
+ puls u,pc
+
+ ttl _e3c8e37
+_e3c8e37:
+ pshs u
+ leas -10,s
+ ldd 14,s
+ stb 1,s
+ ldd #141
+ stb 2,s
+ ldd 16,s
+ std 6,s
+ leax 0,s
+ pshs x
+ ldd #142
+ pshs d
+ lbsr _os9
+ leas 4,s
+ cmpd #-1
+ lbne _6
+_5
+ ldb 2,s
+ sex
+ clra
+ leas 10,s
+ puls u,pc
+
+_6
+ clra
+ clrb
+ leas 10,s
+ puls u,pc
+
+ ttl _c05e1af
+_c05e1af:
+ pshs u
+ vsect
+_7
+ fcb 27
+ fcb 49
+ fcb 0
+ fcb 0
+ endsect
+ leas -4,s
+ ldd #4
+ pshs d
+ leax _7,y
+ pshs x
+ leax 4,s
+ pshs x
+ lbsr memcpy
+ leas 6,s
+ ldb 11,s
+ sex
+ clra
+ stb 2,s
+ ldb 13,s
+ sex
+ clra
+ stb 3,s
+ ldd #4
+ pshs d
+ leax 2,s
+ pshs x
+ ldd 12,s
+ pshs d
+ lbsr write
+ leas 6,s
+ leas 4,s
+ puls u,pc
+
+ ttl _c79ed7e
+_c79ed7e:
+ pshs u
+ leas -1,s
+ clra
+ clrb
+ stb 0,s
+ lbra _10
+_8
+ ldb 0,s
+ sex
+ addd 7,s
+ tfr d,x
+ ldb 0,x
+ sex
+ clra
+ pshs d
+ ldb 2,s
+ sex
+ clra
+ pshs d
+ ldd 9,s
+ pshs d
+ lbsr _c05e1af
+ leas 6,s
+_11
+ ldb 0,s
+ addd #1
+ stb 0,s
+_10
+ ldb 0,s
+ sex
+ clra
+ cmpd #16
+ lblt _8
+_9
+ leas 1,s
+ puls u,pc
+
+ endsect

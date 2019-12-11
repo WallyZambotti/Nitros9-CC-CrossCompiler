@@ -1,0 +1,43 @@
+* Disassembly by Os9disasm of setbuf.r
+
+ psect setbuf_c,$0,$0,3,0,setbuf 
+
+setbuf: pshs  u 
+ ldu   4,s 
+ ldd   6,u 
+ anda  #1 
+ clrb   
+ std   -2,s 
+ beq   L0014 
+ pshs  u 
+ lbsr  fflush 
+ leas  2,s 
+L0014 ldd   6,u 
+ anda  #254 
+ andb  #$f3 
+ std   6,u 
+ ldd   6,s 
+ beq   L0039 
+ ldd   11,u 
+ bne   L0029 
+ ldd   #$0100 
+ std   11,u 
+L0029 ldd   6,u 
+ orb   #8 
+ std   6,u 
+ ldd   6,s 
+ std   2,u 
+ addd  11,u 
+ std   4,u 
+ bra   L0045 
+L0039 ldd   6,u 
+ orb   #4 
+ std   6,u 
+ leax  11,u 
+ stx   4,u 
+ tfr   x,d 
+L0045 std   ,u 
+ puls  u,pc 
+
+ ends  
+

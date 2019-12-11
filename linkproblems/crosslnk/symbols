@@ -1,0 +1,44 @@
+Linkage map for f000tst  File - ./f000tst
+
+Section          Code IDat UDat IDpD UDpD File
+
+cstart_a         0015 0021 0043 00   1d /dd/lib/cstart.r
+     dpsiz     udpd 0021
+     end       udat 0095
+     edata     idat 0043
+     btext     code 0000
+     etext     code 0199
+     memend    udat 0083
+     _cstart   code 001e
+     _stkcheck code 0110
+     stacksiz  code 0159
+     errno     udat 0091
+     freemem   code 0162
+     _mtop     udat 008d
+     _flacc    udat 0085
+     _stbot    udat 008f
+     __dmy     idpd 0000
+     _stkchec  code 0110
+r1_a             0185 0021 0093 01   1d f1.r
+     id1       idpd 0001
+     undp1     udat 0093
+     main      code 0185
+     indp1     idat 0021
+     ud1       udpd 001d
+r2_a             0189 0032 0094 0f   1f f2.r
+     id2       idpd 000f
+     undp2     udat 0094
+     tt        code 0189
+     indp2     idat 0032
+     ud2       udpd 001f
+cfinish_a        018a 0043 0095 1d   21 /dd/lib/clib.l
+     exit      code 018a
+     _exit     code 0190
+profdummy_a      0195 0043 0095 1d   21 /dd/lib/clib.l
+     _trace    code 0195
+     _dumprof  code 0195
+tidyup_a         0196 0043 0095 1d   21 /dd/lib/clib.l
+     _tidyup   code 0196
+                 ---- ---- ---- --
+                 0182 0022 0052 1d  04
+

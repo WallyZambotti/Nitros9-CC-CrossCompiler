@@ -1,0 +1,9 @@
+* Disassembly by Os9disasm of ftelldummy.r
+
+ psect ftelldummy_c,$0,$0,1,0,ftell 
+
+ftell: pshs  u 
+ puls  u,pc 
+
+ ends  
+

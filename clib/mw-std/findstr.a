@@ -1,0 +1,79 @@
+* Disassembly by Os9disasm of findstr.r
+
+ psect findstr_c,$0,$0,1,0,findstr 
+
+findstr: pshs  u 
+ ldu   4,s 
+ ldd   6,s 
+ pshs  d 
+ pshs  u 
+ ldd   #-1 
+ addd  ,s++ 
+ addd  ,s++ 
+ std   6,s 
+ bra   L002f 
+L0015 ldd   8,s 
+ pshs  d 
+ ldd   8,s 
+ addd  #1 
+ std   8,s 
+ subd  #1 
+ pshs  d 
+ bsr   L0071 
+ leas  4,s 
+ std   -2,s 
+ bne   L0064 
+ leau  1,u 
+L002f ldb   [6,s] 
+ bne   L0015 
+ lbra  L008a 
+findnstr: pshs  u 
+ ldu   4,s 
+ ldd   6,s 
+ pshs  d 
+ pshs  u 
+ ldd   #-1 
+ addd  ,s++ 
+ addd  ,s++ 
+ std   6,s 
+ bra   L006a 
+L004c ldd   8,s 
+ pshs  d 
+ ldd   8,s 
+ addd  #1 
+ std   8,s 
+ subd  #1 
+ pshs  d 
+ bsr   L0071 
+ leas  4,s 
+ std   -2,s 
+ beq   L0068 
+L0064 tfr   u,d 
+ puls  u,pc 
+L0068 leau  1,u 
+L006a cmpu  10,s 
+ ble   L004c 
+ bra   L008a 
+L0071 pshs  u 
+ ldu   4,s 
+ bra   L008e 
+L0077 ldb   ,u+ 
+ sex    
+ pshs  d 
+ ldx   8,s 
+ leax  1,x 
+ stx   8,s 
+ ldb   -1,x 
+ sex    
+ cmpd  ,s++ 
+ beq   L008e 
+L008a clra   
+ clrb   
+ puls  u,pc 
+L008e ldb   [6,s] 
+ bne   L0077 
+ ldd   #1 
+ puls  u,pc 
+
+ ends  
+

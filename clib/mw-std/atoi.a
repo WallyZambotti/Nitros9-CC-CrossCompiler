@@ -1,0 +1,65 @@
+* Disassembly by Os9disasm of atoi.r
+
+ psect atoi_c,$0,$0,1,0,atoi 
+
+atoi: pshs  u 
+ ldu   4,s 
+ leas  -5,s 
+ clra   
+ clrb   
+ std   1,s 
+L000a ldb   ,u+ 
+ stb   ,s 
+ cmpb  #$20 
+ beq   L000a 
+ ldb   ,s 
+ cmpb  #9 
+ lbeq  L000a 
+ ldb   ,s 
+ cmpb  #$2d 
+ bne   L0025 
+ ldd   #1 
+ bra   L0027 
+L0025 clra   
+ clrb   
+L0027 std   3,s 
+ ldb   ,s 
+ cmpb  #$2d 
+ beq   L004d 
+ ldb   ,s 
+ cmpb  #$2b 
+ bne   L0051 
+ bra   L004d 
+L0037 ldd   1,s 
+ pshs  d 
+ ldd   #$000a 
+ lbsr  ccmult 
+ pshs  d 
+ ldb   2,s 
+ sex    
+ addd  ,s++ 
+ addd  #$ffd0 
+ std   1,s 
+L004d ldb   ,u+ 
+ stb   ,s 
+L0051 ldb   ,s 
+ sex    
+ leax  _chcodes,y 
+ leax  d,x 
+ ldb   ,x 
+ clra   
+ andb  #8 
+ bne   L0037 
+ ldd   3,s 
+ beq   L006d 
+ ldd   1,s 
+ nega   
+ negb   
+ sbca  #0 
+ bra   L006f 
+L006d ldd   1,s 
+L006f leas  5,s 
+ puls  u,pc 
+
+ ends  
+

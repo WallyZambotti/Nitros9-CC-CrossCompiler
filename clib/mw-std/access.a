@@ -1,0 +1,76 @@
+* Disassembly by Os9disasm of access.r
+
+ psect access_a,$0,$0,2,0,access 
+
+* OS-9 system function equates
+
+I$Dup equ $82 
+I$Create equ $83 
+I$Open equ $84 
+I$MakDir equ $85 
+I$Delete equ $87 
+I$SetStt equ $8e 
+I$Close equ $8f 
+
+access: ldx   2,s 
+ lda   5,s 
+ os9 I$Open 
+ bcs   L000c 
+ os9 I$Close 
+L000c lbra  _sysret 
+open: ldx   2,s 
+ lda   5,s 
+ os9 I$Open 
+ lblo  _os9err 
+ tfr   a,b 
+ clra   
+ rts    
+close: lda   3,s 
+ os9 I$Close 
+ lbra  _sysret 
+mknod: ldx   2,s 
+ ldb   5,s 
+ os9 I$MakDir 
+ lbra  _sysret 
+creat: ldx   2,s 
+ lda   5,s 
+ tfr   a,b 
+ andb  #$24 
+ orb   #$0b 
+ os9 I$Create 
+ bcs   L0043 
+L003f tfr   a,b 
+ clra   
+ rts    
+L0043 cmpb  #$da 
+ lbne  _os9err 
+ lda   5,s 
+ bita  #$80 
+ lbne  _os9err 
+ anda  #7 
+ ldx   2,s 
+ os9 I$Open 
+ lblo  _os9err 
+ pshs  a,u 
+ ldx   #0 
+ leau  ,x 
+ ldb   #2 
+ os9 I$SetStt 
+ puls  a,u 
+ bcc   L003f 
+ pshs  b 
+ os9 I$Close 
+ puls  b 
+ lbra  _os9err 
+unlink: ldx   2,s 
+ os9 I$Delete 
+ lbra  _sysret 
+dup: lda   3,s 
+ os9 I$Dup 
+ lblo  _os9err 
+ tfr   a,b 
+ clra   
+ rts    
+
+ ends  
+

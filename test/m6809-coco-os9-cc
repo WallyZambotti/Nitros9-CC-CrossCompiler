@@ -1,0 +1,118 @@
+#!/bin/bash
+
+# Quick and dirty compiler driver.
+# Usage: cc file.c
+
+DIR=/opt/coco/bin
+TARGET=m6809-coco-os9
+CPP="$DIR/$TARGET-cpp"
+CC1="$DIR/$TARGET-cc1"
+CC2="$DIR/$TARGET-cc2"
+AS="/usr/local/bin/rma"
+LD="/usr/local/bin/rlink"
+CSTART="/dd/lib/cstart.r"
+
+function usage {
+	echo "$0 [-aorS] [-f <file>] [-l <libs] [file.c|file.a|file.r]..."
+	echo 
+	echo " -a supress assembly"
+	echo " -o inhibits the assembly code optimizer pass"
+	echo " -r suppresses linking library modules into an executable program"
+	echo " -S standalone program - do not link in cstart.r"
+	echo " -f final executable output file name"
+	echo " -l libraries to include"
+	exit 1;
+}
+
+doLink=1
+doAsm=1
+doOpt=1
+outFile="a.out"
+libs=""
+
+while getopts "aorf:l:" option; do
+	case "$option" in
+		a ) doAsm=0; doLink=0;;
+		o ) doOpt=0;;
+		r ) doLink=0;;
+		f ) outFile=$OPTARG;;
+		l ) libs="$libs -l=$OPTARG";;
+		S ) CSTART="";;
+		* ) usage;;
+	esac
+done
+
+shift $(($OPTIND - 1))
+
+if [ $# == 0 ]; then
+	usage;
+fi
+
+export PATH=./:$PATH
+
+# process input files into lists
+for f in $*; do
+	name=${f%%.*}
+	ext=${f##*.}
+
+	if [ $ext == "c" ]; then
+		cfiles[${#cfiles[*]}]=$name;
+		buildfiles[${#buildfiles[*]}]=$name.r;
+	fi
+	if [ $ext == "a" ]; then
+		asmfiles[${#asmfiles[*]}]=$name;
+		buildfiles[${#buildfiles[*]}]=$name.r;
+	fi
+
+	if [ $ext == "r" ]; then
+		linkfiles[${#linkfiles[*]}]=$name.r;
+	fi
+done
+	
+for name in ${cfiles[*]}; do
+	# echo "$name.c ..."
+	# echo "\tPreprocess..."
+	$CPP $name.c > $name.m
+	[ $? = 0 ] || exit 1
+
+	# echo "\tCompile..."
+	$CC1 $name.m > /tmp/$$.m
+	[ $? = 0 ] || exit 1
+	rm -f $name.m
+	mv /tmp/$$.m $name.m
+ 
+	if [ $doOpt -eq 1 ]; then
+		# echo "\tOptimize..."
+		$CC2 $name.m > $name.a
+		[ $? = 0 ] || exit 1
+		rm -f $name.m
+	fi
+
+	if [ $doAsm -eq 1 ]; then
+		# echo "\tAsm..."
+		$AS $name.a -O=$name.r
+		[ $? = 0 ] || exit 1
+		rm -f $name.a
+	fi
+done
+
+
+for name in ${asmfiles[*]}; do
+	if [ $doAsm -eq 1 ]; then
+		# echo "Asm $name.a .."
+		$AS $name.a -O=$name.r
+		[ $? = 0 ] || exit 1
+		rm -f $name.a
+	fi
+done
+# In real life, the user needs a way to pass in additional objects and
+# libraries.  This is just thrown together as a proof of concept.
+
+if [ $doLink -eq 1 ]; then
+	# echo "Link.."
+	$LD $CSTART ${buildfiles[@]} ${linkfiles[@]} $libs -o=$outFile
+	[ $? = 0 ] || exit 1
+	rm -f ${buildfiles[*]}
+fi
+
+# echo "Done!"

@@ -1,0 +1,143 @@
+* Disassembly by Os9disasm of chcodes.r
+
+ psect chcodes_c,$0,$0,1,0,0000 
+
+ vsect  
+
+* Initialized Data (class G)
+ fcb $00 
+_chcodes: fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $11 
+ fcb $11 
+ fcb $01 
+ fcb $11 
+ fcb $11 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $01 
+ fcb $30 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $48 
+ fcb $48 
+ fcb $48 
+ fcb $48 
+ fcb $48 
+ fcb $48 
+ fcb $48 
+ fcb $48 
+ fcb $48 
+ fcb $48 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $42 
+ fcb $42 
+ fcb $42 
+ fcb $42 
+ fcb $42 
+ fcb $42 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $02 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $44 
+ fcb $44 
+ fcb $44 
+ fcb $44 
+ fcb $44 
+ fcb $44 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $04 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $20 
+ fcb $01 
+
+ ends  
+
+
+
+ ends  
+

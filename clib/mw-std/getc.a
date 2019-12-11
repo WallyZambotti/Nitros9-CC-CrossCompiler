@@ -1,0 +1,163 @@
+* Disassembly by Os9disasm of getc.r
+
+ psect getc_c,$0,$0,3,0,getc 
+
+* class D external label equates
+
+D0002 equ $0002 
+
+getc: pshs  u 
+ ldu   4,s 
+ beq   L004c 
+ ldd   6,u 
+ anda  #1 
+ clrb   
+ std   -2,s 
+ bne   L004c 
+ ldd   ,u 
+ cmpd  4,u 
+ bcc   L0028 
+ ldd   ,u 
+ addd  #1 
+ std   ,u 
+ subd  #1 
+ tfr   d,x 
+ ldb   ,x 
+ clra   
+ lbra  L0152 
+L0028 pshs  u 
+ lbsr  L009b 
+ lbra  L0150 
+ungetc: pshs  u 
+ ldu   6,s 
+ beq   L004c 
+ ldd   6,u 
+ clra   
+ andb  #1 
+ beq   L004c 
+ ldd   4,s 
+ cmpd  #-1 
+ beq   L004c 
+ ldd   ,u 
+ cmpd  2,u 
+ bhi   L0051 
+L004c ldd   #-1 
+ puls  u,pc 
+L0051 ldd   ,u 
+ addd  #-1 
+ std   ,u 
+ tfr   d,x 
+ ldd   4,s 
+ stb   ,x 
+ ldd   4,s 
+ puls  u,pc 
+getw: pshs  u 
+ ldu   4,s 
+ leas  -4,s 
+ pshs  u 
+ lbsr  getc 
+ leas  2,s 
+ std   2,s 
+ cmpd  #-1 
+ beq   L0086 
+ pshs  u 
+ lbsr  getc 
+ leas  2,s 
+ std   ,s 
+ cmpd  #-1 
+ bne   L008b 
+L0086 ldd   #-1 
+ bra   L0097 
+L008b ldd   2,s 
+ pshs  d 
+ ldd   #8 
+ lbsr  ccasl 
+ addd  ,s 
+L0097 leas  4,s 
+ puls  u,pc 
+L009b pshs  u 
+ ldu   4,s 
+ leas  -2,s 
+ ldd   6,u 
+ anda  #$80 
+ andb  #$31 
+ cmpd  #$8001 
+ beq   L00c1 
+ ldd   6,u 
+ clra   
+ andb  #$31 
+ cmpd  #1 
+ lbne  L013a 
+ pshs  u 
+ lbsr  _setbase 
+ leas  2,s 
+L00c1 leax  _iob,y 
+ pshs  x 
+ cmpu  ,s++ 
+ bne   L00de 
+ ldd   6,u 
+ clra   
+ andb  #$40 
+ beq   L00de 
+ leax  _iob+13,y 
+ pshs  x 
+ lbsr  fflush 
+ leas  2,s 
+L00de ldd   6,u 
+ clra   
+ andb  #8 
+ beq   L010a 
+ ldd   11,u 
+ pshs  d 
+ ldd   2,u 
+ pshs  d 
+ ldd   8,u 
+ pshs  d 
+ ldd   6,u 
+ clra   
+ andb  #$40 
+ beq   L00fe 
+ leax  readln,pcr 
+ bra   L0102 
+L00fe leax  read,pcr 
+L0102 tfr   x,d 
+ tfr   d,x 
+ jsr   ,x 
+ bra   L011c 
+L010a ldd   #1 
+ pshs  d 
+ leax  10,u 
+ stx   2,u 
+ pshs  x 
+ ldd   8,u 
+ pshs  d 
+ lbsr  read 
+L011c leas  6,s 
+ std   ,s 
+ ldd   ,s 
+ bgt   L013f 
+ ldd   6,u 
+ pshs  d 
+ ldd   2,s 
+ beq   L0131 
+ ldd   #$0020 
+ bra   L0134 
+L0131 ldd   #$0010 
+L0134 ora   ,s+ 
+ orb   ,s+ 
+ std   6,u 
+L013a ldd   #-1 
+ bra   L0150 
+L013f ldd   2,u 
+ addd  #1 
+ std   ,u 
+ ldd   2,u 
+ addd  ,s 
+ std   4,u 
+ ldb   [D0002,u] 
+ clra   
+L0150 leas  2,s 
+L0152 puls  u,pc 
+
+ ends  
+

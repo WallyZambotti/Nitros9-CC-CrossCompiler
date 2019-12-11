@@ -1,0 +1,39 @@
+* Disassembly by Os9disasm of fread.r
+
+ psect fread_c,$0,$0,1,0,fread 
+
+fread: pshs  u 
+ ldu   4,s 
+ leas  -6,s 
+ clra   
+ clrb   
+ bra   L0037 
+L000a ldd   12,s 
+ std   4,s 
+ bra   L0026 
+L0010 ldd   16,s 
+ pshs  d 
+ lbsr  getc 
+ leas  2,s 
+ std   ,s 
+ cmpd  #-1 
+ beq   L0040 
+ ldd   ,s 
+ stb   ,u+ 
+L0026 ldd   4,s 
+ addd  #-1 
+ std   4,s 
+ subd  #-1 
+ bgt   L0010 
+ ldd   2,s 
+ addd  #1 
+L0037 std   2,s 
+ ldd   2,s 
+ cmpd  14,s 
+ blt   L000a 
+L0040 ldd   2,s 
+ leas  6,s 
+ puls  u,pc 
+
+ ends  
+
