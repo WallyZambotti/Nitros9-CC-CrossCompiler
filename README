@@ -10,7 +10,7 @@ It contains:
 - rlink - linker
 - ansifront - ANSI C to K&R preprocessor
 
-It has been succesufully compiled and tested on Ubuntu 18.04 (AMD).
+It has been successfully compiled and tested on Ubuntu 18.04 (AMD).
 
 All Linux binaries produced are 32bit.  Some binaries are required to be 
 compiled with no optimization or they will fail.  Be warned if you change
