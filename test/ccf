@@ -1,2 +1,2 @@
 #!/bin/sh
-./coprep $1 | ./ansifront | ./co_comp -s | ./co_opt >`basename $1 .c`.m
+coprep $1 | ansifront | co_comp -s | co_opt >`basename $1 .c`.m

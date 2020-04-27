@@ -7,4 +7,8 @@ ccsources/c.opt/co_opt
 ccsources/c.opt/*.o
 ccsources/cprep19/coprep
 ccsources/cprep19/*.o
+ccsources/rlink/rlink
+ccsources/rlink/*.o
+ccsources/rma/rma
+ccsources/rma/*.o
 test/dd/cmds/*
