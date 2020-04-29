@@ -1,8 +1,55 @@
-The file 'cc.patch' contains diffs to the clib sources and various
-Makefiles.  No modifications have been made to the preprocessor,
-compiler and optimizer.
+Linux CC cross compiler for (CoCo) Nitros-9
 
-The 'dd' subdirectory needs to be copied or symlinked under the root
-directory, since that's where the preprocessor expects to find
-headers.  This is a definite 'FIXME'.  When building for Linux, this
-should come either from the command line or an environment variable.
+It contains:
+
+- cc2.5.3 : c front end
+- cprep19 : c preprocessor
+- c.comp : c compiler
+- c.opt - (c) rma asm optimizer
+- rma(r63) - relocating macro assembler
+- rlink - linker
+- ansifront - ANSI C to K&R preprocessor
+
+It has been successfully compiled and tested on Ubuntu 18.04 (AMD).
+
+All Linux binaries produced are 32bit.  Some binaries are required to be 
+compiled with no optimization or they will fail.  Be warned if you change
+the make files.
+
+It is known to work on Intel (AMD) platforms.
+
+This C compiler tools chain produces binaries compatible with:
+
+  Nitros-9 (MC6809 or HD6309).
+
+A test directory is provided that contains a dd directory.  You should place
+the Linux executables in the dd/cmds directory and create a symbolic link from 
+/dd to that directory:
+
+  $ sudo ln -s ~/Nitros9-CC-CrossCompiler/test/dd /dd
+
+And add the cmds directory to your path:
+
+  $ PATH=$PATH:/dd/cmds
+
+Some libraries and defs files are also provided under the test/dd/lib & test/dd/defs
+directories.  You can add more by copying them from a Nitros-9 distribution.
+
+You will then be able to compile Nitros-9 C programs with the same instructions
+as normally used under Nitros-9:
+
+  $ cc253 -A -s helloworld.c -f=helloworld
+  $ cc253 main.c sub1.c sub2.r mylib.r -f=myprog
+  
+The provided example in the test directory can be compiled with:
+
+  $ cc253 -A -s texturebm.c gfxlib.c gpulib.c -f=texturebm
+
+(However this example program will only run on the OVCC emulator with the MPU
+device installed in one of the MPI slots.)
+
+When copying the executables to Nitros-9 (either real or emulator) for execution 
+remember to set the execute attributes:
+
+  $ attr myprogram e pe
+
