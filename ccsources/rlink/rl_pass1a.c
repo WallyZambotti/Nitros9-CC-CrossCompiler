@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libgen.h>
-#include <arpa/inet.h>
+#include <winsock2.h> // <arpa/inet.h>
 #endif
 #include "rlink.h"
 

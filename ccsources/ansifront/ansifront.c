@@ -1,6 +1,6 @@
 #ifndef CoCo
-#include "/usr/include/ctype.h"
-#include <unistd.h>
+#include <ctype.h>
+#include <sys/unistd.h>
 #include <string.h>
 #include <stdlib.h>
 #define writeln write

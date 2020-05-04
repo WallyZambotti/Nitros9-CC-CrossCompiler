@@ -23,6 +23,9 @@
 **  11-28-19  Added Linux support. Walter Zambotti
 */
 
+#ifdef __MINGW32__
+#include <windows.h>
+#endif
 #include <unistd.h>
 #include <string.h>
 #include "cc.h"
@@ -45,11 +48,27 @@ char * chkccdev();
 static int newipath = -1;
 static int tmpfd;
 
+#ifdef __MINGW32__
+PROCESS_INFORMATION pi;
+#endif
+#ifdef UNIX
+pid_t child;
+#endif
+
 cleanup()
 {
+#ifdef __MINGW32__
+     if (pi.hProcess)
+          TerminateProcess(pi.hProcess, 1);
+#endif
+#ifdef OS9
      if (childid)
           kill(childid, 2);
-
+#endif
+#ifdef UNIX
+     if (childid)
+          kill(child, 3);
+#endif
      if (newopath)
      {
           close(1);
@@ -722,21 +741,18 @@ int   code;
      if (childstat > code)
           trap(childstat);
 }
-#else
+#endif
+#ifdef UNIX
 runit(cmd, code)
 char *cmd;
 int code;
 {
-     pid_t child;
      int childstat, i = 2;
      char *argv[32];
 
      /*   fprintf(stderr, "   %-6s:\n", cmd); */
-#ifdef OS9
-     fprintf(stderr, "   %-7s:  %s", cmd, parmbuf);
-#else
      fprintf(stderr, "   %-7s:  %s\n", cmd, parmbuf);
-#endif
+
      if (zflag)
           return;
 
@@ -760,7 +776,49 @@ int code;
      }
 
      waitpid(child, &childstat, 0);
+}
+#endif
 
+#ifdef __MINGW32__
+runit(cmd, code)
+char *cmd;
+int code;
+{
+     STARTUPINFO si;
+     char cmdline[256];
+
+     ZeroMemory(&si, sizeof(si));
+     si.cb = sizeof(si);
+     ZeroMemory(&pi, sizeof(pi));
+
+     /*   fprintf(stderr, "   %-6s:\n", cmd); */
+     fprintf(stderr, "   %-7s:  %s\n", cmd, parmbuf);
+
+     if (zflag)
+          return;
+
+     strcpy(cmdline, cmd);
+     strcat(cmdline, " ");
+     strcat(cmdline, parmbuf);
+
+     if(!CreateProcess(NULL,   // No module name (use command line)
+          cmdline,        // Command line
+          NULL,           // Process handle not inheritable
+          NULL,           // Thread handle not inheritable
+          FALSE,          // Set handle inheritance to FALSE
+          0,              // No creation flags
+          NULL,           // Use parent's environment block
+          NULL,           // Use parent's starting directory 
+          &si,            // Pointer to STARTUPINFO structure
+          &pi))           // Pointer to PROCESS_INFORMATION structure
+     {
+          error("cannot execute %s", cmd);
+          return;
+     }
+
+     WaitForSingleObject(pi.hProcess, INFINITE);
+     CloseHandle(pi.hProcess);
+     CloseHandle(pi.hThread);
 }
 #endif
 

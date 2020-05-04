@@ -4,8 +4,9 @@
 #include <string.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#endif
+#else
 #include <lowio.h>
+#endif
 
 typedef struct fdeflst {
   VDecl *fdl_decl;

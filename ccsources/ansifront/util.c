@@ -1,5 +1,5 @@
 #ifndef CoCo
-#include "/usr/include/ctype.h"
+#include <ctype.h>
 #include <stdlib.h>
 #else
 #include <ctype.h>

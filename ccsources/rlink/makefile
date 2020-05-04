@@ -1,8 +1,11 @@
+include ../make.common
+
 # MERGE		= cat
 # SOFTLINK	= ln -s
 # RM		= rm
 # MAKE		= make
-CFLAGS		= -mx32 -Dunix -DUNIX -I. -g -I../include -Wall
+CFLAGS		= -Dunix -DUNIX -I. -g -I../include -Wall
+LFLAGS		= -g
 # ASM		= rma
 
 # %.l: %.r
@@ -16,16 +19,25 @@ CFLAGS		= -mx32 -Dunix -DUNIX -I. -g -I../include -Wall
 
 # CFLAGS += -DDEBUG
 
+ifeq ($(TARGETOS),Linux)
+	CFLAGS+=-mx32
+	LFLAGS+=-mx32
+endif
+
+ifeq ($(TARGETOS),Mingw)
+	LIBS+=-lws2_32
+endif
+
 BINARY = rlink
 OBJS = rlink_main.o rl_pass1a.o rl_pass1b.o rl_pass2.o os9out.o decbout.o
 
 $(BINARY):	$(OBJS)
-	$(CC) -mx32 $(OBJS) -o $@
-
+	$(CC) $(LFLAGS) $(OBJS) -o $@ $(LIBS)
+	
 $(OBJS):	rlink.h out.h ../include/rof.h
 
 clean:
-	rm $(BINARY) *.o
+	rm -f $(BINARY) *.o *.exe
 
 install: $(BINARY)
 	cp $(BINARY) ../../test/dd/cmds

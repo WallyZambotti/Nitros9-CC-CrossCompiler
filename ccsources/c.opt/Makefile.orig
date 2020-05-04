@@ -14,5 +14,5 @@ proto.h: $(protos)
 	mv proto.z proto.h
 
 clean:
-	rm -f *.o *.s proto.h co_opt
+	rm -f *.o *.s co_opt
 

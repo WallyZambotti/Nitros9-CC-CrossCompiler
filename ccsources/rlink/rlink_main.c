@@ -572,6 +572,14 @@ int             getname(s, fp)
 	register char  *s;
 	FILE           *fp;
 {
+	// int chr,cnt=0;
+	// chr = getc(fp);
+	// while(chr)
+	// {
+	// 	*s++ = chr;
+	// 	cnt++;
+	// 	chr = getc(fp);
+	// }
 	while ((*s++ = getc(fp)));
 	*s = '\0';
 	return 0;

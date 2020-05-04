@@ -1,5 +1,12 @@
-CFLAGS = -mx32 -g -Wall -D__WIN32
-LFLAGS = -mx32 -g -Wall -o co_comp
+include ../make.common
+
+CFLAGS = -g -Wall -D__WIN32
+LFLAGS = -g -Wall
+
+ifeq ($(TARGETOS),Linux)
+	CFLAGS+=-mx32
+	LFLAGS+=-mx32
+endif
 
 RELS = comp_01.o comp_02.o comp_03.o comp_04.o comp_05.o comp_06.o\
 	   comp_07.o comp_08.o comp_09.o comp_10.o comp_11.o comp_12.o\
@@ -10,7 +17,7 @@ protos = comp_01.c comp_02.c comp_03.c comp_04.c comp_05.c\
 		 comp_11.c comp_12.c comp_13.c comp_14.c comp_15.c
 
 co_comp: $(RELS)
-	$(CC) $(RELS) $(LFLAGS)
+	$(CC) $(RELS) $(LFLAGS) -o co_comp
 
 comp_01.o: ccomp.h
 
@@ -22,4 +29,7 @@ proto.h: $(protos)
 	mv proto.z proto.h
 
 clean:
-	rm -f *.o *.s co_comp
+	rm -f *.o *.s co_comp *.exe
+
+install:
+	cp co_comp ../../test/dd/cmds
