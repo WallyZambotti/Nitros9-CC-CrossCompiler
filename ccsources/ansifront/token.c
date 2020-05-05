@@ -222,6 +222,16 @@ static SkipLine()
   SkipChr()
 }
 
+static IgnrLine()
+{
+  while (!eofmark && *inchrp!='\n') {
+    WrChar(*inchrp);
+    SkipChr()
+  }
+  WrLn();
+  SkipChr()
+}
+
 static int MakLine(n)
 int n;
 {
@@ -340,7 +350,7 @@ static RdPrep()
         break;
       case '2':
       case '6':
-        SkipLine();
+        IgnrLine();
         break;
       case '1':
       case '0':

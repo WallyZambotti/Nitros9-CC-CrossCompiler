@@ -1,15 +1,16 @@
 TARGET=texturebm
-
+CC=cc253
+CFLAGS=-A -s -r
 OBJS=texturebm.r gfxlib.r gpulib.r
 
 $(TARGET): $(OBJS)
-	echo cc $(OBJS) -f=$(TARGET)
+	$(CC) $(OBJS) -f=$(TARGET)
 
 gfxlib.r: gfxlib.c gfxlib.h types.h
-	./ccf gfxlib.c
+	$(CC) $(CFLAGS) gfxlib.c
 
 gpulib.r: gpulib.c gpulib.h types.h
-	./ccf gpulib.c
+	$(CC) $(CFLAGS) gpulib.c
 
 texturebm.r: texturebm.c gfxlib.h gpulib.h types.h
-	./ccf texturebm.c
+	$(CC) $(CFLAGS) texturebm.c

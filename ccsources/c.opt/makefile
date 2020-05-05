@@ -21,7 +21,7 @@ proto.h: $(protos)
 	mv proto.z proto.h
 
 clean:
-	rm -f *.o *.s proto.h co_opt *.exe
+	rm -f *.o *.s co_opt *.exe
 
 install:
 	cp co_opt ../../test/dd/cmds

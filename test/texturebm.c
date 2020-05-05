@@ -262,7 +262,10 @@ void RenderCharacter(int charidx)
 {
     register Character *character = &characters[charidx];
     rect.x = 18 * character->direction + 144 * frame;
-    GPURenderTexture(scrnid, character->textureid, character->xloc, character->yloc, &rect);
+    GPURenderTexture(scrnid, 
+      character->textureid, 
+      character->xloc, 
+      character->yloc, &rect);
 
     GPUSetColor(scrnid, 15);
     switch(character->direction)

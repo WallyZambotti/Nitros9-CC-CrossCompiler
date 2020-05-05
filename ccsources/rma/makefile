@@ -1,3 +1,5 @@
+include ../make.common
+
 # MERGE		= cat
 # SOFTLINK	= ln -s
 # RM		= rm

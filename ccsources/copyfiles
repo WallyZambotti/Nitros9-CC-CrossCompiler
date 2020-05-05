@@ -1,0 +1,85 @@
+#! /bin/sh
+convert()
+{
+	FROM="$1"; shift; TO="$1"
+
+	echo "Converting ${FROM} to ${TO}..."
+	# we do this twice to make sure everything gets processed
+	gcc -fpreprocessed -dD -E -P - < "$FROM" | unifdef -DCOCO -U_OSK -UOSK -U__STDC__ | sed -f convert.sed | indent -l999 -npro -linux -bad -bap -bbo -di0 -nip -nhnl -nlp -nprs -psl -bbo -ppi1 | sed -f convert.sed | uncrustify -c knr.cfg -q -l c > "$TO"
+}
+
+convert comp_01.c cmain.c
+convert comp_02.c misc.c
+convert comp_03.c build.c
+convert comp_04.c optim.c
+convert comp_05.c stats.c
+convert comp_06.c longs.c
+convert comp_07.c floats.c
+convert comp_08.c inits.c
+convert comp_09.c get.c
+convert comp_10.c codgen.c
+convert comp_11.c local.c
+convert comp_12.c lex.c
+convert comp_13.c tranexp.c
+convert comp_14.c declare.c
+convert comp_15.c bool.c
+convert ccomp.h cj.h
+convert defines.h cjdefs.h
+convert proto.h prototype.h
+
+cat >> cjdefs.h <<-EOF
+
+	#define POINTER     0x10
+	#define ARRAY       0x20
+	#define FUNCTION    0x30
+
+	#define XTYPE       0x30
+	#define BASICT      0x0F
+
+	#define DEFTYPE	31
+	#define CAST	32
+	#define SHARP	103
+	#define QUOTE	105
+	#define NEWLN	108
+	#define EXG		115
+	#define LOAD	117
+	#define NODE	119
+	#define STORE	121
+	#define PUSH	122
+	#define JMP		124
+	#define JMPEQ	125
+	#define JMPNE	126
+	#define LOADIM	127
+	#define COMPARE	129
+	#define CNDJMP	130
+	#define STOI	138
+	#define TEST	139
+	#define HALVE	150
+	#define UHALVE	151
+	#define IDOUBLE	152
+
+	/* indirection masks */
+	#define INDIRECT	0x8000
+	#define NOTIND		0x7FFF
+
+	#define btype(t)    ((t) & BASICT)
+	#define isptr(t)    (((t) & XTYPE) == POINTER)
+	#define isary(t)    (((t) & XTYPE) == ARRAY)
+	#define isftn(t)    (((t) & XTYPE) == FUNCTION)
+	#define modtype(t,b) (((t) & (~BASICT)) + b)
+
+	#define getlabel(a) (++curlabel)
+
+	#define islong(t)   (t->type == LONG)
+	#ifdef DOFLOATS
+	#define isfloat(t)  (t->type == FLOAT || t->type == DOUBLE)
+	#endif
+
+	typedef struct structstruct elem;
+	typedef struct initstruct initnode;
+	typedef struct expstr expnode;
+	typedef struct symstr symnode;
+	typedef struct downsym pshnode;
+	typedef struct dimstr dimnode;
+
+EOF

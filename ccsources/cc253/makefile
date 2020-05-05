@@ -6,7 +6,7 @@ CFLAGS=-g
 LFLAGS=-g
 
 ifeq ($(TARGETOS),Linux)
-	CFLAGS+=-mx32
+	CFLAGS+=-mx32  -DUNIX
 	LFLAGS+=-mx32
 endif
 

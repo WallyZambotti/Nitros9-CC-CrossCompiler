@@ -1,2 +1,2 @@
-export TARGETOS = Mingw
-#export TARGETOS = Linux
+#export TARGETOS = Mingw
+export TARGETOS = Linux
