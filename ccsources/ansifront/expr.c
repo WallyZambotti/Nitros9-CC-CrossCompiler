@@ -493,7 +493,7 @@ VDecl *ovdecl;
         return sizeof(char);
       case T_INT-256:
         if (vdecl.vd_tspec->ts_xdat.ts_siln.ts_len==T_LONG-256)
-          return sizeof(long);
+          return 4 ; /* return sizeof(long); cant assume is same as CoCo */
         else
           /* Cannot assume size of int of cross compiliation system is the same as OS9/C int 
              Probably it will be different

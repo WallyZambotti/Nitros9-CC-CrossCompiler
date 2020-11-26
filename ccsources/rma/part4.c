@@ -718,11 +718,11 @@ l156b()				/* THIS FUNCTION IS OK */
 	++SrcChar;
 	if (!not_pcr())
 	{
-		pc_rel();
+		return pc_rel();
 	}
 	else
 	{
-		l1584();
+		return l1584();
 	}
 }
 
