@@ -493,15 +493,7 @@ VDecl *ovdecl;
         return sizeof(char);
       case T_INT-256:
         if (vdecl.vd_tspec->ts_xdat.ts_siln.ts_len==T_LONG-256)
-<<<<<<< HEAD
-#ifndef CoCo //need to think about this
-          return 4 ; /* cannot assume the same as CoCo sizeof(long); */
-#else
-          return sizeof(long);
-#endif
-=======
           return 4 ; /* return sizeof(long); cant assume is same as CoCo */
->>>>>>> 7988b072251d1b2c5d4d7550ff2f338b3e4028de
         else
 #ifndef CoCo
           return 2;
