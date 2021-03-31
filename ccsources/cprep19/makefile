@@ -2,7 +2,7 @@ include ../make.common
 
 RELS = cp.o cp1.o cp2.o cp3.o cp4.o solve.o
 
-CFLAGS = -g -I.
+CFLAGS = -g -fsigned-char -I.
 LFLAGS = -g
 
 ifeq ($(TARGETOS),Linux)
@@ -11,7 +11,7 @@ ifeq ($(TARGETOS),Linux)
 endif
 
 coprep: $(RELS)
-	gcc $(LFLAGS) $(RELS) -o $@
+	$(CC) $(LFLAGS) $(RELS) -o $@
 
 $(RELS): cp.h
 

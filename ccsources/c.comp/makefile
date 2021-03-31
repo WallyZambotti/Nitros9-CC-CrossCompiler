@@ -1,11 +1,15 @@
 include ../make.common
 
-CFLAGS = -g -Wall -D__WIN32
+CFLAGS = -g -Wall -fsigned-char 
 LFLAGS = -g -Wall
 
 ifeq ($(TARGETOS),Linux)
 	CFLAGS+=-mx32
 	LFLAGS+=-mx32
+endif
+
+ifeq ($(TARGETOS),Mingw)
+	CFLAGS+=-D__WIN32
 endif
 
 RELS = comp_01.o comp_02.o comp_03.o comp_04.o comp_05.o comp_06.o\

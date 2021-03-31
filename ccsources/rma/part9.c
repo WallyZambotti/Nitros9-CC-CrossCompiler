@@ -5,6 +5,9 @@
  * Most of these seem to be MACRO - related
  */
 
+#ifdef UNIX
+#include <unistd.h>
+#endif
 #include "rma.h"
 
 /* "place" for fseek     */

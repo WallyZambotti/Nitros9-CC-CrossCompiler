@@ -4,7 +4,7 @@ include ../make.common
 # SOFTLINK	= ln -s
 # RM		= rm
 # MAKE		= make
-CFLAGS		= -Dunix -DUNIX -I. -g -I../include -Wall
+CFLAGS		= -I. -g -fsigned-char -I../include
 LFLAGS		= -g
 # ASM		= rma
 

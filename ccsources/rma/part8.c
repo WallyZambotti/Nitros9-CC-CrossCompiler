@@ -268,7 +268,7 @@ prnthdr()
 		now = time(0);
 		tm = localtime(&now);
 		/* getime( &D_Time ); */
-		printf("Microware OS-9 %s  %02d/%02d/%02d  %02d:%02d", "RMA - V2.0",
+		printf("Microware OS-9 %s  %02d/%02d/%02d  %02d:%02d:%02d", "RMA - V2.0",
 		       tm->tm_mon + 1, tm->tm_mday, tm->tm_year + 1900,
 		       tm->tm_hour, tm->tm_min, tm->tm_sec);
 		printf("   %-22s Page %03d\n", SrcNam[0], ++ListPag);

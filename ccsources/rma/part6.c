@@ -1,5 +1,7 @@
 /* Part6.c - mostly deals with Labels */
-
+#ifdef UNIX
+#include <stdlib.h>
+#endif
 #include "rma.h"
 
 #define _ischar(c) (_chcodes[c]&(_DIGIT|_LOWER|_UPPER|_CONTROL))

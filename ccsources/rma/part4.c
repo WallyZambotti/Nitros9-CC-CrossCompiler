@@ -718,11 +718,11 @@ l156b()				/* THIS FUNCTION IS OK */
 	++SrcChar;
 	if (!not_pcr())
 	{
-		pc_rel();
+		return pc_rel();
 	}
 	else
 	{
-		l1584();
+		return l1584();
 	}
 }
 
@@ -798,6 +798,7 @@ pc_rel()			/* originally  l1602() */
 	{			/* if "pcr" instead of "pc" */
 		++SrcChar;
 	}
+
 	++NumBytes;
 	d0063 |= 0x80;
 	d0033 -= (CodeSize + NumBytes + 1);

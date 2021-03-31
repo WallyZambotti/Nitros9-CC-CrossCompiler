@@ -1,4 +1,5 @@
-.vscode/*
+.vscode/**
+ccsources/.vscode/**
 ccsources/ansifront/ansifront
 ccsources/ansifront/ansifront.exe
 ccsources/ansifront/*.o
@@ -20,6 +21,4 @@ ccsources/rma/*.o
 ccsources/cc253/cc253
 ccsources/cc253/cc253.exe
 ccsources/cc253/*.o
-test/*.o
-test/*.exe
-test/dd/cmds/*
+ccsources/V10/**

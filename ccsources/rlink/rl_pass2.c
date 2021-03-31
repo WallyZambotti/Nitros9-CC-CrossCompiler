@@ -14,6 +14,7 @@
  **********************************************************************/
 
 #include <stdio.h>
+#include <fcntl.h>
 #if defined(UNIX) || defined(__APPLE__) || defined(WIN32)
 #include <stdlib.h>
 #include <string.h>
@@ -48,6 +49,8 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 {
 	struct ob_files *ob_cur;
 	struct object_header obh;
+	int edf;
+	extern int extData;
 
 	if (omitC)
 	{
@@ -56,6 +59,16 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 			+ t_idpd/* Initialized direct page data of all
 				 * segements */
 			+ t_idat; /* Initialized data of all segments */
+	}
+	else if (extData)
+	{
+		/* write(0, "extData ms\n", 12); */
+		obh.module_size = strlen(modname)	/* module name */
+			+ t_code/* Code size of all segements */
+			+ 2 + t_dt * 2	/* Data-text reference table */
+			+ 2 + t_dd * 2	/* Data-data reference table */
+			+ strlen(modname) + 1;	/* Program name (NULL
+						 * terminated) */
 	}
 	else
 	{
@@ -105,6 +118,15 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 	{
 		fprintf(stderr, "linker fatal: cannot open output file %s\n", ofile);
 		return 1;
+	}
+
+	if (extData)
+	{
+		char edfname[32];
+		strcpy(edfname, obh.module_name);
+		strcat(edfname, "$DATA");
+		edf = open(edfname, O_RDWR | O_CREAT);
+		/* write(0, "extData open\n", 14); */
 	}
 
 	/* Now dump all of the code */
@@ -392,11 +414,32 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 		if (ob_cur == *ob_start && !omitC)
 		{
 			DBGPNT(("Initialized linker dp data is %4.4lx - %4.4lx\n", ftell(ob_cur->fp), ftell(ob_cur->fp) + 2));
-			XXX_body_byte(&obh, (t_idpd >> 8) & 0xff);
-			XXX_body_byte(&obh, t_idpd & 0xff);
+			if (!extData)
+			{
+				XXX_body_byte(&obh, (t_idpd >> 8) & 0xff);
+				XXX_body_byte(&obh, t_idpd & 0xff);
+			}
+			else
+			{
+				/* write(0, "extData dp size\n", 17); */
+				unsigned char buf[2];
+				buf[0] = (t_idpd >> 8) & 0xff;
+				buf[1] = t_idpd & 0xff;
+				write(edf, buf, 2);
+			}
+			
 		}
 
-		XXX_body(&obh, data, ob_cur->hd.h_ddata);
+		if (!extData)
+		{
+			XXX_body(&obh, data, ob_cur->hd.h_ddata);
+		}
+		else
+		{
+			/* write(0, "extData dp data\n", 17); */
+			write(edf, data, ob_cur->hd.h_ddata);
+		}
+		
 		if (data != NULL)
 		{
 			free(data);
@@ -506,17 +549,43 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 		if (ob_cur == *ob_start && !omitC)
 		{
 			DBGPNT(("Initialized linker data is %4.4lx - %4.4lx\n", ftell(ob_cur->fp), ftell(ob_cur->fp) + 2));
-			XXX_body_byte(&obh, (t_idat >> 8) & 0xff);
-			XXX_body_byte(&obh, t_idat & 0xff);
+			if (!extData)
+			{
+				XXX_body_byte(&obh, (t_idat >> 8) & 0xff);
+				XXX_body_byte(&obh, t_idat & 0xff);
+			}
+			else 
+			{
+				/* write(0, "extData size\n", 14); */
+				unsigned char buf[2];
+				buf[0] = (t_idat >> 8) & 0xff;
+				buf[1] = t_idat & 0xff;
+				write(edf, buf, 2);
+			}
 		}
 
-		XXX_body(&obh, data, ob_cur->hd.h_data);
+		if (!extData)
+		{
+			XXX_body(&obh, data, ob_cur->hd.h_data);
+		}
+		else
+		{
+			/* write(1, "extData data\n", 14); */
+			write(edf, data, ob_cur->hd.h_data);
+		}
+		
 		if (data != NULL)
 		{
 			free(data);
 		}
         
 		ob_cur = ob_cur->next;
+	}
+
+	if (extData)
+	{
+		/* write(1, "extData close\n", 15); */
+		close(edf);
 	}
 
 	if (ob_cur && ob_cur->fp)

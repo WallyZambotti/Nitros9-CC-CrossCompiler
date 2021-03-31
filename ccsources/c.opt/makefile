@@ -1,6 +1,6 @@
 include ../make.common
 
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -fsigned-char 
 LFLAGS = -g -Wall
 
 ifeq ($(TARGETOS),Linux)

@@ -25,6 +25,7 @@ unsigned        adjoff();
 int             help();
 int             asign_sm();
 int             dmp_ext();
+int				extData;
 
 extern int      pass1a();
 extern int      pass1b();
@@ -241,6 +242,13 @@ int             main(argc, argv)
 				/* Allow static data in BASIC09 modules */
 				{
 					okstatic = 1;
+				}
+				break;
+
+			case 'x':
+				/* output initialized dpdata and data to external binary file */
+				{
+					extData = 1;
 				}
 				break;
 

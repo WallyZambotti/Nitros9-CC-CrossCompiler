@@ -55,6 +55,8 @@ PROCESS_INFORMATION pi;
 pid_t child;
 #endif
 
+runit(char*, int);
+
 cleanup()
 {
 #ifdef __MINGW32__
@@ -742,7 +744,9 @@ int   code;
           trap(childstat);
 }
 #endif
+
 #ifdef UNIX
+#warning UNIX runit
 runit(cmd, code)
 char *cmd;
 int code;

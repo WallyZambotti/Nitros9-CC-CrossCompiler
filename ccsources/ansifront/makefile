@@ -1,7 +1,7 @@
 include ../make.common
 
 OBJS=ansifront.o binexpr.o expr.o token.o decl.o poexpr.o util.o
-CFLAGS=-g #-I/dd/defs
+CFLAGS=-g -fsigned-char #-I/dd/defs
 
 ifeq ($(TARGETOS),Linux)
 	CFLAGS+=-mx32
@@ -9,7 +9,7 @@ ifeq ($(TARGETOS),Linux)
 endif
 
 ansifront: $(OBJS)
-	cc $(LFLAGS) -o ansifront $(OBJS)
+	$(CC) $(LFLAGS) -o ansifront $(OBJS)
 
 install:
 	cp ansifront ../../test/dd/cmds

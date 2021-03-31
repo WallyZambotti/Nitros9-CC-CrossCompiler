@@ -4,6 +4,10 @@
 
 #include "rma.h"
 #include <errno.h>
+#ifdef UNIX
+#include <unistd.h>
+#include <stdlib.h>
+#endif
 
 /*
  * extern FILE *f_opn(); char *itoa();
@@ -644,7 +648,7 @@ errexit(report)
 
 #ifdef _OSK
 /* Add coco functions not included with OSK */
-
+#warning OSK defined !!!!!!!!!!!!!!!!!!!!
 char           *strchr(st, c)
 	char           *st,
 	                c;

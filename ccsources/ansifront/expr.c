@@ -493,13 +493,18 @@ VDecl *ovdecl;
         return sizeof(char);
       case T_INT-256:
         if (vdecl.vd_tspec->ts_xdat.ts_siln.ts_len==T_LONG-256)
+#ifndef CoCo //need to think about this
+          return 4 ; /* cannot assume the same as CoCo sizeof(long); */
+#else
           return sizeof(long);
+#endif
         else
-          /* Cannot assume size of int of cross compiliation system is the same as OS9/C int 
-             Probably it will be different
+#ifndef CoCo
+          return 2;
+#else
           return sizeof(int);
-          */
-         return 2; /* A CoCo C int is always 2 */
+#endif
+          return 2; /* A CoCo C int is always 2 */
       case T_STRUCT-256:
         {
           VDecl *fields = GetFlds(&vdecl);
