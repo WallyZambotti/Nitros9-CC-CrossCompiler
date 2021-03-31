@@ -293,6 +293,13 @@ emcommon:
                          }
                          goto saver;
 
+                    case 'v':
+                         p+=1;
+                         rofvers=(int)*p; /* ROF version can be 0 or 1 */
+                         rofvers-=(int)'0';
+                         if(rofvers < 0 || rofvers > 1) rofvers = 1;
+                         goto saver;
+
                     case 'V':
                          logo();
                          exit (0);
@@ -616,6 +623,8 @@ saver:
                     splcat(ofn);
                     trmcat();
                     lasfilp = destfile;
+                    if (!rofvers)
+                         splcat("-v0");
                     if (alflg)
                         splcat("-l");
                     if (ylflg)
@@ -984,6 +993,7 @@ usage()
     "   -L        = ask assembler for listing",
     "   -t        = use transendental library (clibt.l)",
     "   -T=<path> = use alternate (or NO) temp. dir.",
+    "   -vX       = set ROF version to X (0 or 1) default 1", 
     "   -V        = show version number", 
     "   -w        = waste the compile for error checking only",
     "   -x        = use the work dir. for the main library",

@@ -53,3 +53,19 @@ remember to set the execute attributes:
 
   $ attr myprogram e pe
 
+Note:
+
+This source will only compile on C implementations where the sizeof(int) equals the sizeof(int*)
+as pointers and integers are passed interchangably.  This means it should compile on most 8/16/32
+C compilers but not on most 64 bit compilers. On 64 bit OSes you will need to install a 32 bit tool
+chain and 32 bit libraries.
+
+The CoCo C implementation defines char(s) as signed.  Your cross compiler must also define chars
+as signed.  On Linux Arm char is unsigned by default but can be changed via a compile option.
+
+This source has been succefully compiled and tested on:
+
+    CoCo OS9 or Nitros9
+    Intel Linux 64 bit with 32 bit support
+    ARM Linux 64 bit with 32 bit support
+    ARM Linux 32 bit (PI OS)
