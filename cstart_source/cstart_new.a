@@ -2,6 +2,9 @@
  use os9defs.a
  endc
 
+DEBUGCS equ 0
+
+ ifne DEBUGCS
 panic macro
  leas \1,s
  os9 F$Exit
@@ -40,6 +43,7 @@ dumpreg macro
  lbsr dump2b
  puls \1
  endm
+ endc
 
 pushzero macro
  clr ,-s clear a byte on stack
@@ -82,8 +86,9 @@ _stbot: rmb 2 current stack bottom limit
 errno: rmb 2 global error holder
  endsect
 
-* Some debug messages
+* Some DEBUG messages
 
+ ifne DEBUGCS
  string scstart,/cstart/
  string scalcmn,/calc_mod_name/
  string srddpdt,/read_dpdata/
@@ -95,6 +100,7 @@ errno: rmb 2 global error holder
 
 newline fcb $0d
 _newline equ *-newline
+ endc
 
 datatext fcc /$DATA/
  fcb $0d
@@ -106,7 +112,9 @@ _cstart:
 * save bottom of mem (u), top of mem (y)
  pshs u,y 4 bytes on stack
 
-* writeln 1,scstart
+ ifne DEBUGCS
+ writeln 1,scstart
+ endc
 
 * Clear DP page
  clra setup to clear
@@ -115,7 +123,9 @@ csta05 sta ,u+ clear dp bytes
  decb
  bne csta05
 
-* writeln 1,scalcmn
+ ifne DEBUGCS
+ writeln 1,scalcmn
+ endc
 
 * Calc address of module name
  leax etext,pcr point to dp-data count word
@@ -127,7 +137,9 @@ csta05 sta ,u+ clear dp bytes
  leax d,x
 
 cont1 
-* writeln 1,sfndnam
+ ifne DEBUGCS
+ writeln 1,sfndnam
+ endc
 
 * copy module name to a buffer
  leas -32,s reserve buffer for filename 36 bytes on stack
@@ -147,8 +159,10 @@ mncp lda ,x+
  std ,u terminate with newline
 
  tfr s,x beginning of filename
-* writeidx 1,",x",#8
-* writeln 1,sopnfil
+ ifne DEBUGCS
+ writeidx 1,",x",#8
+ writeln 1,sopnfil
+ endc
 
 * open the file
 * file mode (must have exec to find in exec dir)
@@ -159,7 +173,9 @@ mncp lda ,x+
 * save path number, reserve two bytes for buffer
  pshs a,x 7 bytes on stack
 
-* writeln 1,sfilopn
+ ifne DEBUGCS
+ writeln 1,sfilopn
+ endc
 
 * read first two bytes for dp data initialize size
  leax 1,s point at 2 byte buffer
@@ -167,7 +183,9 @@ mncp lda ,x+
  OS9 I$Read
  lbcs ebderr2 7 bytes on stack
 
-* writeln 1,srddpdt
+ ifne DEBUGCS
+ writeln 1,srddpdt
+ endc
 
 * read the initialized dp data from file to dp mem
  ldy 1,s dp data size
@@ -176,7 +194,9 @@ mncp lda ,x+
  OS9 I$Read
  lbcs ebderr2 7 bytes on stack
 
-* writeln 1,srddata
+ ifne DEBUGCS
+ writeln 1,srddata
+ endc
 
 * read next two bytes for data initialize size
  lda ,s path number
@@ -191,7 +211,10 @@ mncp lda ,x+
  puls a,y path number and size of intialized data
  OS9 I$Read
  lbcs ebderr1 4 bytes on stack
-* writeln 1,sclrbss
+
+ ifne DEBUGCS
+ writeln 1,sclrbss
+ endc
 
 * Get top of intialized mem address
  ldu 2,s get beginning address again
@@ -399,6 +422,7 @@ patch10 ldd ,y++ get the offset
  leas 4,s reset the stack
  rts and return
 
+ ifne DEBUGCS
 bin2hex tfr b,a
  lsrb
  lsrb
@@ -430,5 +454,6 @@ dump2b
  leas 5,s clear string off stack
  puls d
  rts
+ endc
 
  endsect
