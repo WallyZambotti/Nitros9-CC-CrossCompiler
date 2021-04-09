@@ -1,12 +1,16 @@
 #include <stdio.h>
+#ifndef COCO
 #include <string.h>
+#else
+#define fputc putc
+#endif
 #include "rlink.h"
 
 
-FILE           *ofp;
+static FILE           *ofp;
 
 
-int             decb_header(obh, filename)
+int             dcb_hdr(obh, filename)
 	struct object_header *obh;
 	char           *filename;
 {
@@ -27,10 +31,10 @@ int             decb_header(obh, filename)
 	return 0;
 }
 
-int             decb_body(obh, data, size)
+int             dcb_body(obh, data, size)
 	struct object_header *obh;
 	char           *data;
-	size_t          size;
+	unsigned long          size;
 {
 	int             i;
 
@@ -42,7 +46,7 @@ int             decb_body(obh, data, size)
 	return 0;
 }
 
-int             decb_body_byte(obh, byte)
+int             dcb_bdyb(obh, byte)
 	struct object_header *obh;
 	int             byte;
 {
@@ -51,7 +55,7 @@ int             decb_body_byte(obh, byte)
 	return 0;
 }
 
-int             decb_tail(obh)
+int             dcb_tail(obh)
 	struct object_header *obh;
 {
 	fputc('\xFF', ofp);	/* Trailer flag */

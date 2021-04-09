@@ -11,6 +11,9 @@
  *
  **********************************************************************/
 
+#ifdef COCO
+#undef UNIX
+#endif
 #include <stdio.h>
 #if defined(UNIX) || defined(__APPLE__)
 #include <stdlib.h>
@@ -83,10 +86,10 @@ int             main(argc, argv)
 
 
 	/* Assume default output is OS-9 module */
-	XXX_header = os9_header;
-	XXX_body_byte = os9_body_byte;
-	XXX_body = os9_body;
-	XXX_tail = os9_tail;
+	pfheader = os9_hdr;
+	pfbodybt = os9_bdyb;
+	pfbody = os9_body;
+	pftail = os9_tail;
 
 	/* Parse options */
 	for (i = 1; i < argc; i++)
@@ -114,10 +117,10 @@ int             main(argc, argv)
 			case 'B':
 				/* Disk BASIC Modle */
 				{
-					XXX_header = decb_header;
-					XXX_body_byte = decb_body_byte;
-					XXX_body = decb_body;
-					XXX_tail = decb_tail;
+					pfheader = dcb_hdr;
+					pfbodybt = dcb_bdyb;
+					pfbody = dcb_body;
+					pftail = dcb_tail;
 				}
 				break;
 

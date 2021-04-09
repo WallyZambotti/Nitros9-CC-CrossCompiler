@@ -1,15 +1,19 @@
 #include <stdio.h>
+#ifndef COCO
 #include <string.h>
+#else
+#define fputc putc
+#endif
 #include "rlink.h"
 
 
 static int      compute_crc();
 
 unsigned char   _crc[3];
-FILE           *ofp;
+static FILE           *ofp;
 
 
-int             os9_header(obh, filename)
+int             os9_hdr(obh, filename)
 	struct object_header *obh;
 	char           *filename;
 {
@@ -105,12 +109,19 @@ int             os9_header(obh, filename)
 int             os9_body(obh, data, size)
 	struct object_header *obh;
 	char           *data;
-	size_t          size;
+	unsigned long          size;
 {
 	int             i;
+	// long p;
 
 	for (i = 0; i < size; i++)
 	{
+		// p = ftell(ofp);
+		// fprintf(stderr, "%04lx %02x\n", p, (unsigned char)data[i]);
+		// if(p == 0x09CA)
+		// {
+		// 	write(2, "At byte\n", 9);
+		// }
 		fputc(data[i], ofp);
 		compute_crc(data[i]);
 	}
@@ -118,10 +129,19 @@ int             os9_body(obh, data, size)
 	return 0;
 }
 
-int             os9_body_byte(obh, byte)
+int             os9_bdyb(obh, byte)
 	struct object_header *obh;
 	int             byte;
 {
+	// long p;
+	// p = ftell(ofp) ;
+
+	// p = ftell(ofp);
+	// fprintf(stderr, "%04lx %02x\n", p, (unsigned char)byte);
+	// if(p == 0x09CA)
+	// {
+	// 	write(2, "At byte\n", 9);
+	// }
 	fputc(byte, ofp);
 	compute_crc(byte);
 

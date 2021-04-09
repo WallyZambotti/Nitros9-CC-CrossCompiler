@@ -13,19 +13,27 @@
  * data - Boisy
  **********************************************************************/
 
+#ifdef COCO
+#undef UNIX
+#define READ 1
+#define WRITE 2
+#define EXEC 4
+#endif
 #include <stdio.h>
-#include <fcntl.h>
 #if defined(UNIX) || defined(__APPLE__) || defined(WIN32)
+#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <libgen.h>
 #endif
 #include "rlink.h"
 
-int     (*XXX_header)();
-int     (*XXX_body)();
-int     (*XXX_body_byte)();
-int     (*XXX_tail)();
+int     (*pfheader)();
+int     (*pfbody)();
+int     (*pfbodybt)();
+int     (*pftail)();
+
+struct exp_sym *        fetchsym();
 
 extern unsigned t_code,
                 t_idat,
@@ -107,14 +115,21 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 		fprintf( stderr, "linker fatal: output file name cannot exceed 29 characters\n" );
 		return 1;
 	}
-
+#ifdef COCO
+   	strncpy(obh.module_name, modname, sizeof(obh.module_name));
+#else
    	(void)strncpy(obh.module_name, modname, sizeof(obh.module_name));
+#endif
 
 	obh.edition = edition;
 	if (obh.edition == -1)
 		obh.edition = (*ob_start)->hd.h_edit;
 
-	if (XXX_header(&obh, ofile))
+#ifdef COCO
+	if ((*pfheader)(&obh, ofile))
+#else
+	if (pfheader(&obh, ofile))
+#endif
 	{
 		fprintf(stderr, "linker fatal: cannot open output file %s\n", ofile);
 		return 1;
@@ -125,7 +140,11 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 		char edfname[32];
 		strcpy(edfname, obh.module_name);
 		strcat(edfname, "$DATA");
+#ifdef COCO
+		edf = open(edfname, READ | WRITE | EXEC);
+#else
 		edf = open(edfname, O_RDWR | O_CREAT);
+#endif
 		/* write(0, "extData open\n", 14); */
 	}
 
@@ -156,6 +175,7 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 		/* Now patch binary */
 		fseek(ob_cur->fp, ob_cur->object + ob_cur->hd.h_ocode + ob_cur->hd.h_data + ob_cur->hd.h_ddata, SEEK_SET);
 		count = getwrd(ob_cur->fp);
+		/* fprintf(stderr, "Ext Ref count %d\n", count); */
 
 		if (count > 0)
 		{
@@ -168,10 +188,17 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 			                valueflg;
 			unsigned        number,
 			                value;
+			struct exp_sym *sym;
 
 			getname(symbol, ob_cur->fp);
 			value = getsym(*ob_start, symbol, &valueflg);
 			number = getwrd(ob_cur->fp);
+        	/* fprintf(stderr, " sym name : %s (%d)\n", symbol, number);*/
+
+			if(!(sym = fetchsym(*ob_start, symbol)))
+			{
+				fprintf(stderr, "symbol not found\n");
+			}	
 
 			DBGPNT(("%-10s %-10s %4.4x (", ob_cur->modname, symbol, value));
 			ftext(valueflg, DEF);
@@ -186,7 +213,9 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 
 				flag = getc(ob_cur->fp);
 				offset = getwrd(ob_cur->fp);
-
+            	/* fprintf(stderr, " flag %02x offset %04x\n", flag, offset); */
+    			/* fprintf (stderr, " addr = %04x\n", *(short*)&(data[offset])); */
+ 
 				if (flag & CODLOC)
 				{
 					DBGPNT((" External ref patch: ("));
@@ -306,7 +335,11 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 			}
 		}
 
-		XXX_body(&obh, data, ob_cur->hd.h_ocode);
+#ifdef COCO
+		(*pfbody)(&obh, data, ob_cur->hd.h_ocode);
+#else
+		pfbody(&obh, data, ob_cur->hd.h_ocode);
+#endif
 		if (data != NULL)
 		{
 			free(data);
@@ -416,8 +449,13 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 			DBGPNT(("Initialized linker dp data is %4.4lx - %4.4lx\n", ftell(ob_cur->fp), ftell(ob_cur->fp) + 2));
 			if (!extData)
 			{
-				XXX_body_byte(&obh, (t_idpd >> 8) & 0xff);
-				XXX_body_byte(&obh, t_idpd & 0xff);
+#ifdef COCO
+				(*pfbodybt)(&obh, (t_idpd >> 8) & 0xff);
+				(*pfbodybt)(&obh, t_idpd & 0xff);
+#else
+				pfbodybt(&obh, (t_idpd >> 8) & 0xff);
+				pfbodybt(&obh, t_idpd & 0xff);
+#endif
 			}
 			else
 			{
@@ -432,7 +470,11 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 
 		if (!extData)
 		{
-			XXX_body(&obh, data, ob_cur->hd.h_ddata);
+#ifdef COCO
+			(*pfbody)(&obh, data, ob_cur->hd.h_ddata);
+#else
+			pfbody(&obh, data, ob_cur->hd.h_ddata);
+#endif
 		}
 		else
 		{
@@ -551,8 +593,13 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 			DBGPNT(("Initialized linker data is %4.4lx - %4.4lx\n", ftell(ob_cur->fp), ftell(ob_cur->fp) + 2));
 			if (!extData)
 			{
-				XXX_body_byte(&obh, (t_idat >> 8) & 0xff);
-				XXX_body_byte(&obh, t_idat & 0xff);
+#ifdef COCO
+				(*pfbodybt)(&obh, (t_idat >> 8) & 0xff);
+				(*pfbodybt)(&obh, t_idat & 0xff);
+#else
+				pfbodybt(&obh, (t_idat >> 8) & 0xff);
+				pfbodybt(&obh, t_idat & 0xff);
+#endif
 			}
 			else 
 			{
@@ -566,7 +613,11 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 
 		if (!extData)
 		{
-			XXX_body(&obh, data, ob_cur->hd.h_data);
+#ifdef COCO
+			(*pfbody)(&obh, data, ob_cur->hd.h_data);
+#else
+			pfbody(&obh, data, ob_cur->hd.h_data);
+#endif
 		}
 		else
 		{
@@ -595,8 +646,13 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 	/* Now dump Data-text table */
 	if (!omitC)
 	{
-		XXX_body_byte(&obh, (t_dt >> 8) & 0xff);
-		XXX_body_byte(&obh, t_dt & 0xff);
+#ifdef COCO
+		(*pfbodybt)(&obh, (t_dt >> 8) & 0xff);
+		(*pfbodybt)(&obh, t_dt & 0xff);
+#else
+		pfbodybt(&obh, (t_dt >> 8) & 0xff);
+		pfbodybt(&obh, t_dt & 0xff);
+#endif
 	}
 
 	ob_cur = *ob_start;
@@ -633,8 +689,13 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 					else
 						offset += ob_cur->IDat;
 
-					XXX_body_byte(&obh, (offset >> 8) & 0xff);
-					XXX_body_byte(&obh, offset & 0xff);
+#ifdef COCO
+					(*pfbodybt)(&obh, (offset >> 8) & 0xff);
+					(*pfbodybt)(&obh, offset & 0xff);
+#else
+					pfbodybt(&obh, (offset >> 8) & 0xff);
+					pfbodybt(&obh, offset & 0xff);
+#endif
 				}
 				else
 				{
@@ -651,8 +712,13 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 	/* Now dump Data-data table */
 	if (!omitC)
 	{
-		XXX_body_byte(&obh, (t_dd >> 8) & 0xff);
-		XXX_body_byte(&obh, t_dd & 0xff);
+#ifdef COCO
+		(*pfbodybt)(&obh, (t_dd >> 8) & 0xff);
+		(*pfbodybt)(&obh, t_dd & 0xff);
+#else
+		pfbodybt(&obh, (t_dd >> 8) & 0xff);
+		pfbodybt(&obh, t_dd & 0xff);
+#endif
 	}
 
 	ob_cur = *ob_start;
@@ -692,8 +758,13 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 					else
 						offset += ob_cur->IDat;
 
-					XXX_body_byte(&obh, (offset >> 8) & 0xff);
-					XXX_body_byte(&obh, offset & 0xff);
+#ifdef COCO
+					(*pfbodybt)(&obh, (offset >> 8) & 0xff);
+					(*pfbodybt)(&obh, offset & 0xff);
+#else
+					pfbodybt(&obh, (offset >> 8) & 0xff);
+					pfbodybt(&obh, offset & 0xff);
+#endif
 				}
 			}
 		}
@@ -707,13 +778,24 @@ int             pass2(ob_start, ofile, modname, B09EntPt, extramem, edition, omi
 			DBGPNT(("Program name is %4.4lx - %4.4lx\n", 
 				ftell(ob_cur->fp), ftell(ob_cur->fp) + strlen(modname) + 1));
 		/* Now dump program name as a C string */
-		XXX_body(&obh, modname, strlen(modname));
-		XXX_body_byte(&obh, 0);
+#ifdef COCO
+		(*pfbody)(&obh, modname, strlen(modname));
+#else
+		pfbody(&obh, modname, strlen(modname));
+#endif
+#ifdef COCO
+		(*pfbodybt)(&obh, 0);
+#else
+		pfbodybt(&obh, 0);
+#endif
 	}
 
 	/* Now write CRC */
-	XXX_tail(&obh);
-
+#ifdef COCO
+	(*pftail)(&obh);
+#else
+	pftail(&obh);
+#endif
 	return 0;
 }
 
@@ -749,3 +831,32 @@ unsigned        getsym(ob, symbol, flag)
 
 	return 0;
 }
+
+
+/* Get a pointer to the symbol */
+struct exp_sym *        fetchsym(ob, symbol)
+	struct ob_files *ob;
+	char           *symbol;
+{
+	while (ob != NULL)
+	{
+		struct exp_sym *exp;
+
+		exp = ob->symbols;
+
+		while (exp != NULL)
+		{
+			if (strcmp(symbol, exp->name) == 0)
+			{
+				return exp;
+			}
+
+			exp = exp->next;
+		}
+
+		ob = ob->next;
+	}
+
+	return 0;
+}
+

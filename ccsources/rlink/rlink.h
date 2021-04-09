@@ -1,5 +1,9 @@
+#ifndef COCO
 #include <stdlib.h>
 #include <rof.h>
+#else
+#include "rof.h"
+#endif
 #include "out.h"
 
 //#define DEBUG
@@ -57,10 +61,10 @@ extern int      rm_exref();
 extern int      check_name();
 extern int      ftext();
 
-extern	int     (*XXX_header)();
-extern	int     (*XXX_body_byte)();
-extern	int     (*XXX_body)();
-extern	int     (*XXX_tail)();
+extern	int     (*pfheader)();
+extern	int     (*pfbodybt)();
+extern	int     (*pfbody)();
+extern	int     (*pftail)();
 
 #define mc(c) ((c)&0xff)
 #define DEF 1

@@ -11,6 +11,9 @@
  *
  **********************************************************************/
 
+#ifdef COCO
+#undef UNIX
+#endif
 #include <stdio.h>
 #if defined(UNIX) || defined(WIN32)
 #include <stdlib.h>
@@ -24,6 +27,11 @@
 #endif
 #undef RELATIVE
 #include "rlink.h"
+
+#ifdef COCO
+#define ntohs(x) (x)
+#define htons(x) (x)
+#endif
 
 extern unsigned t_code,
                 t_idat,

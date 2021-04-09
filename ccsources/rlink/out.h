@@ -1,9 +1,11 @@
+#if 0
 typedef enum
 {
 	object_kind_os9,
 	object_kind_decb
 
 }               object_type;
+#endif
 
 #if 0
 struct os9
@@ -27,12 +29,21 @@ struct decb
 
 struct object_header
 {
+#ifdef COCO
+	unsigned   module_size;
+	unsigned   offset_to_module_name;
+#else
 	unsigned short  module_size;
 	unsigned short  offset_to_module_name;
+#endif
 	int             type_language;
 	int             attr_rev;
 	int             execution_offset;
+#ifdef COCO
+	unsigned   permanent_storage_size;
+#else
 	unsigned short  permanent_storage_size;
+#endif
 	char            module_name[29 + 1];
 	int             edition;
 
@@ -46,12 +57,12 @@ object_type     kind;
 #endif
 };
 
-int     os9_header();
-int     os9_body_byte();
+int     os9_hdr();
+int     os9_bdyb();
 int     os9_body();
 int     os9_tail();
 
-int     decb_header();
-int     decb_body_byte();
-int     decb_body();
-int     decb_tail();
+int     dcb_hdr();
+int     dcb_bdyb();
+int     dcb_body();
+int     dcb_tail();

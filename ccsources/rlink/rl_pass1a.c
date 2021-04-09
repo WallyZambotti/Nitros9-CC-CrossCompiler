@@ -33,6 +33,11 @@ extern unsigned t_code,
 extern int      dup_fnd,
                 dupfnd;
 
+#ifdef COCO
+#define ntohs(x) (x)
+#define htons(x) (x)
+#endif
+
 #ifdef BDS
 unsigned short int htons(unsigned short int host)
 {
@@ -182,7 +187,7 @@ int             pass1a(ob_start, rfiles, rfile_count, B09EntPt)
 		}
 
 		/* Record the position of the start of the object code */
-		ob_cur->object = ftell(ob_cur->fp);
+		*(unsigned long*)&(ob_cur->object) = (unsigned long)ftell(ob_cur->fp);
 
 		/* Grind past the object code and initialized data */
 
@@ -220,7 +225,7 @@ int             pass1a(ob_start, rfiles, rfile_count, B09EntPt)
 		 * count up local references that need data-data or data-text
 		 * adjustments
 		 */
-		ob_cur->locref = ftell(ob_cur->fp);
+		*(unsigned long*)&ob_cur->locref = (unsigned long)ftell(ob_cur->fp);
 
 		count = getwrd(ob_cur->fp);
 		while (count--)
