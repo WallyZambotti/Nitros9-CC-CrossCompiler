@@ -20,7 +20,7 @@
 #define EXEC 4
 #endif
 #include <stdio.h>
-#if defined(UNIX) || defined(__APPLE__) || defined(__WIN32)
+#if defined(UNIX) || defined(__APPLE__) || defined(_WIN32)
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
