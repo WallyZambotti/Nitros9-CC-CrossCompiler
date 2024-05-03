@@ -714,7 +714,7 @@ addmem (siz)
          * provide enough stack space to accomodate its use when compiling
          */
 #ifndef _OSK
-#   ifdef __WIN32
+#   ifdef _WIN32
     if ( ! (memptr = malloc (siz)))
 #   else
 #   ifdef COCO
