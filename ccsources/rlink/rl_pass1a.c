@@ -17,7 +17,7 @@
 #include <string.h>
 #include <libgen.h>
 #endif
-#ifdef __MINGW__
+#ifdef __MINGW32__
 #include <winsock2.h> // <arpa/inet.h>
 #endif
 #include "rlink.h"
