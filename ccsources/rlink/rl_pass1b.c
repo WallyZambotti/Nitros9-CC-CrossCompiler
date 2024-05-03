@@ -15,11 +15,11 @@
 #undef UNIX
 #endif
 #include <stdio.h>
-#if defined(UNIX) || defined(WIN32)
+#if defined(UNIX) || defined(_WIN32)
 #include <stdlib.h>
 #include <string.h>
 #include <libgen.h>
-#if defined(WIN32)
+#if defined(_WIN32)
 #include <winsock2.h>
 #else
 #include <netinet/in.h>
